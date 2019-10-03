@@ -1,0 +1,15 @@
+package br.com.reignited.yumfood.domain.repository;
+
+import java.util.List;
+
+import br.com.reignited.yumfood.domain.model.Restaurante;
+
+public interface RestauranteRepository {
+	public List<Restaurante> listar();
+
+	public Restaurante buscar(Long id);
+
+	public Restaurante salvar(Restaurante restaurante);
+
+	public void remover(Restaurante restaurante);
+}
