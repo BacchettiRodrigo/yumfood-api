@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.model.Cozinha;
-import br.com.reignited.yumfood.domain.repository.CozinhaRepository;
 import br.com.reignited.yumfood.domain.service.CozinhaService;
 
 @RestController
@@ -72,10 +70,10 @@ public class CozinhaController {
 		try {
 			cozinhaService.excluir(cozinhaId);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntidadeNaoEncontradaException ex) {
 			return ResponseEntity.notFound().build();
-			
+
 		} catch (EntidadeEmUsoException ex) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
