@@ -25,8 +25,6 @@ import br.com.reignited.yumfood.domain.service.CozinhaService;
 @RequestMapping("/cozinhas")
 public class CozinhaController {
 
-	// @Autowired
-	// private CozinhaRepository cozinhaRepository;
 	@Autowired
 	private CozinhaService cozinhaService;
 
@@ -40,7 +38,8 @@ public class CozinhaController {
 		Cozinha cozinha = cozinhaService.buscar(cozinhaId);
 
 		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha); // return ResponseEntity.status(HttpStatus.OK).body(cozinha);
+			return ResponseEntity.ok(cozinha);
+			// return ResponseEntity.status(HttpStatus.OK).body(cozinha);
 		}
 
 		return ResponseEntity.notFound().build();
