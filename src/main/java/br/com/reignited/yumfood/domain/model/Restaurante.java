@@ -1,19 +1,13 @@
 package br.com.reignited.yumfood.domain.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Objects;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-@Data
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "restaurante")
 public class Restaurante {
 
-	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -27,6 +21,10 @@ public class Restaurante {
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
+
+	public Restaurante() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -58,5 +56,26 @@ public class Restaurante {
 
 	public void setCozinha(Cozinha cozinha) {
 		this.cozinha = cozinha;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Restaurante)) return false;
+		Restaurante that = (Restaurante) o;
+		return id.equals(that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "Restaurante{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				'}';
 	}
 }

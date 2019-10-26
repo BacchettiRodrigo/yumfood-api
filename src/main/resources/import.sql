@@ -14,3 +14,10 @@ insert into estado (nome) values ('São Paulo');
 insert into estado (nome) values ('Rio de Janeiro');
 insert into estado (nome) values ('Minas Gerais');
 insert into estado (nome) values ('Espírito Santo');
+
+insert into cidade (nome, estado_id) values ('Vitória', 4);
+insert into cidade (nome, estado_id) values ('Vila Velha', 4);
+insert into cidade (nome, estado_id) values ('Campinas', 1);
+insert into cidade (nome, estado_id) values ('São Paulo', 1);
+insert into cidade (nome, estado_id) values ('Belo Horizonte', 3);
+insert into cidade (nome, estado_id) values ('Niterói', 2);
