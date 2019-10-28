@@ -1,16 +1,8 @@
 package br.com.reignited.yumfood.domain.repository;
 
-import java.util.List;
-
 import br.com.reignited.yumfood.domain.model.Estado;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EstadoRepository {
+public interface EstadoRepository extends JpaRepository<Estado, Long> {
 
-	public List<Estado> listar();
-
-	public Estado buscar(Long id);
-
-	public Estado salvar(Estado estado);
-
-	public void remover(Long id);
 }

@@ -1,15 +1,8 @@
 package br.com.reignited.yumfood.domain.repository;
 
-import java.util.List;
-
 import br.com.reignited.yumfood.domain.model.Restaurante;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RestauranteRepository {
-	public List<Restaurante> listar();
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
-	public Restaurante buscar(Long id);
-
-	public Restaurante salvar(Restaurante restaurante);
-
-	public void remover(Restaurante restaurante);
 }

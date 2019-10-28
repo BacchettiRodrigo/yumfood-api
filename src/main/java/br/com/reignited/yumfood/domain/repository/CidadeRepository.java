@@ -1,16 +1,8 @@
 package br.com.reignited.yumfood.domain.repository;
 
-import java.util.List;
-
 import br.com.reignited.yumfood.domain.model.Cidade;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CidadeRepository {
+public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 
-	public List<Cidade> listar();
-
-	public Cidade buscar(Long id);
-
-	public Cidade salvar(Cidade cidade);
-
-	public void remover(Cidade cidade);
 }

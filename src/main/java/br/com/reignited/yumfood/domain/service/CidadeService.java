@@ -6,9 +6,11 @@ import br.com.reignited.yumfood.domain.model.Estado;
 import br.com.reignited.yumfood.domain.repository.CidadeRepository;
 import br.com.reignited.yumfood.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CidadeService {
@@ -20,28 +22,31 @@ public class CidadeService {
     private EstadoRepository estadoRepository;
 
     public List<Cidade> listar() {
-        return cidadeRepository.listar();
+        return cidadeRepository.findAll();
     }
 
-    public Cidade buscar(Long id) {
-        return cidadeRepository.buscar(id);
+    public Optional<Cidade> buscar(Long id) {
+        return cidadeRepository.findById(id);
     }
 
     public Cidade salvar(Cidade cidade) {
         Long estadoId = cidade.getEstado().getId();
-        Estado estado = estadoRepository.buscar(estadoId);
 
-        if (estado == null) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de estado com o código %d", estadoId));
-        }
+        Estado estado = estadoRepository.findById(estadoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de estado com o código %d", estadoId)));
 
         cidade.setEstado(estado);
-        return cidadeRepository.salvar(cidade);
+        return cidadeRepository.save(cidade);
     }
 
-    public void remover(Cidade cidade) {
-        cidadeRepository.remover(cidade);
+    public void remover(Long id) {
+        try {
+            cidadeRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new EntidadeNaoEncontradaException(
+                    String.format("Não existe cadastro de cidade com o código %d", id));
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.reignited.yumfood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,20 +20,20 @@ public class CozinhaService {
 	private CozinhaRepository cozinhaRepository;
 
 	public List<Cozinha> listar() {
-		return cozinhaRepository.listar();
+		return cozinhaRepository.findAll();
 	}
 
-	public Cozinha buscar(Long id) {
-		return cozinhaRepository.buscar(id);
+	public Optional<Cozinha> buscar(Long id) {
+		return cozinhaRepository.findById(id);
 	}
 
 	public Cozinha salvar(Cozinha cozinha) {
-		return cozinhaRepository.salvar(cozinha);
+		return cozinhaRepository.save(cozinha);
 	}
 
 	public void excluir(Long cozinhaId) {
 		try {
-			cozinhaRepository.remover(cozinhaId);
+			cozinhaRepository.deleteById(cozinhaId);
 		} catch (EmptyResultDataAccessException ex) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Não existe um cadastro de cozinha com o código %d", cozinhaId));

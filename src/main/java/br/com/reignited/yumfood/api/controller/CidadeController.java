@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cidades")
@@ -26,10 +27,10 @@ public class CidadeController {
 
     @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-        Cidade cidade = cidadeService.buscar(cidadeId);
+        Optional<Cidade> cidade = cidadeService.buscar(cidadeId);
 
-        if (cidade != null) {
-            return ResponseEntity.ok(cidade);
+        if (cidade.isPresent()) {
+            return ResponseEntity.ok(cidade.get());
         }
 
         return ResponseEntity.notFound().build();
@@ -49,14 +50,14 @@ public class CidadeController {
     @PutMapping("/{cidadeId}")
     public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
         try {
-            Cidade cidadeAtual = cidadeService.buscar(cidadeId);
+            Optional<Cidade> cidadeAtual = cidadeService.buscar(cidadeId);
 
-            if (cidadeAtual == null) {
+            if (cidadeAtual.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
 
-            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-            cidadeService.salvar(cidadeAtual);
+            BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
+            cidadeService.salvar(cidadeAtual.get());
             return ResponseEntity.ok(cidadeAtual);
         } catch (EntidadeNaoEncontradaException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -65,13 +66,11 @@ public class CidadeController {
 
     @DeleteMapping("/{cidadeId}")
     public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId) {
-        Cidade cidade = cidadeService.buscar(cidadeId);
-
-        if (cidade == null) {
+        try{
+            cidadeService.remover(cidadeId);
+            return ResponseEntity.noContent().build();
+        } catch (EntidadeNaoEncontradaException e){
             return ResponseEntity.notFound().build();
         }
-
-        cidadeService.remover(cidade);
-        return ResponseEntity.noContent().build();
     }
 }
