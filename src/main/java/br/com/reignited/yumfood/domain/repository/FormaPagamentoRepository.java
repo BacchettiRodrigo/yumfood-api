@@ -1,16 +1,8 @@
 package br.com.reignited.yumfood.domain.repository;
 
-import java.util.List;
-
 import br.com.reignited.yumfood.domain.model.FormaPagamento;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FormaPagamentoRepository {
+public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
 
-	public List<FormaPagamento> listar();
-
-	public FormaPagamento buscar(Long id);
-
-	public FormaPagamento salvar(FormaPagamento formaPagamento);
-
-	public void remover(FormaPagamento formaPagamento);
 }

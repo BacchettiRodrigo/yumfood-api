@@ -1,39 +1,30 @@
 package br.com.reignited.yumfood.infrastructure.repository;
 
-import java.util.List;
+import br.com.reignited.yumfood.domain.model.Restaurante;
+import br.com.reignited.yumfood.domain.repository.RestauranteRepository;
+import br.com.reignited.yumfood.domain.repository.custom.RestauranteRepositoryCustom;
+import br.com.reignited.yumfood.infrastructure.repository.specs.RestauranteSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+@Repository
+public class RestauranteRepositoryImpl implements RestauranteRepositoryCustom {
 
-import br.com.reignited.yumfood.domain.model.Restaurante;
-import br.com.reignited.yumfood.domain.repository.RestauranteRepository;
+    @PersistenceContext
+    private EntityManager manager;
 
-@Component
-public class RestauranteRepositoryImpl implements RestauranteRepository{
-	
-	@PersistenceContext
-	EntityManager manager;
-	
-	public List<Restaurante> listar() {
-		return manager.createQuery("from Restaurante", Restaurante.class).getResultList();
-	}
+    @Autowired
+    @Lazy
+    private RestauranteRepository restauranteRepository;
 
-	public Restaurante buscar(Long id) {
-		return manager.find(Restaurante.class, id);
-	}
-
-	@Transactional
-	public Restaurante salvar(Restaurante restaurante) {
-		return manager.merge(restaurante);
-	}
-	
-	@Transactional
-	public void remover(Restaurante restaurante) {
-		restaurante = buscar(restaurante.getId());
-		manager.remove(restaurante);
-	}
-
+    @Override
+    public List<Restaurante> findComFreteGratis(String nome) {
+        return restauranteRepository.findAll(RestauranteSpecs.comFreteGratis()
+                .and(RestauranteSpecs.comNomeSemelhante(nome)));
+    }
 }
