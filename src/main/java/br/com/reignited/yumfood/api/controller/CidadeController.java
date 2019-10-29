@@ -2,7 +2,6 @@ package br.com.reignited.yumfood.api.controller;
 
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.model.Cidade;
-import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
