@@ -2,9 +2,9 @@ insert into cozinha (nome) values ('Tailandesa');
 insert into cozinha (nome) values ('Indiana');
 insert into cozinha (nome) values ('Brasileira');
 
-insert into restaurante (nome, taxa_frete, cozinha_id) values ('Thaifood', 7.50, 1);
-insert into restaurante (nome, taxa_frete, cozinha_id) values ('Thai Gourmet', 10, 1);
-insert into restaurante (nome, taxa_frete, cozinha_id) values ('Yoga Fire', 5.40, 2);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Thaifood', 7.50, 1, utc_timestamp, utc_timestamp);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Yoga Fire', 5.40, 2, utc_timestamp, utc_timestamp);
 
 insert into forma_pagamento (descricao) values ('À Vista');
 insert into forma_pagamento (descricao) values ('Cartão de Crédito');
