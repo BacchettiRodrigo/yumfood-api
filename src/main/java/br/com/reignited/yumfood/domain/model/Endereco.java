@@ -13,7 +13,7 @@ public class Endereco {
     private String logradouro;
 
     @Column(name = "endereco_numero")
-    private String numeto;
+    private String numero;
 
     @Column(name = "endereco_complemento")
     private String complemento;
@@ -45,11 +45,11 @@ public class Endereco {
     }
 
     public String getNumeto() {
-        return numeto;
+        return numero;
     }
 
-    public void setNumeto(String numeto) {
-        this.numeto = numeto;
+    public void setNumeto(String numero) {
+        this.numero = numero;
     }
 
     public String getComplemento() {
@@ -83,7 +83,7 @@ public class Endereco {
         Endereco endereco = (Endereco) o;
         return cep.equals(endereco.cep) &&
                 logradouro.equals(endereco.logradouro) &&
-                numeto.equals(endereco.numeto) &&
+                numero.equals(endereco.numero) &&
                 complemento.equals(endereco.complemento) &&
                 bairro.equals(endereco.bairro) &&
                 cidade.equals(endereco.cidade);
@@ -91,7 +91,7 @@ public class Endereco {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cep, logradouro, numeto, complemento, bairro, cidade);
+        return Objects.hash(cep, logradouro, numero, complemento, bairro, cidade);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Endereco {
         return "Endereco{" +
                 "cep='" + cep + '\'' +
                 ", logradouro='" + logradouro + '\'' +
-                ", numeto='" + numeto + '\'' +
+                ", numeto='" + numero + '\'' +
                 ", complemento='" + complemento + '\'' +
                 ", bairro='" + bairro + '\'' +
                 ", cidade=" + cidade +
