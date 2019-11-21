@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RestauranteService {
 
+    private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe cadastro de restaurante com o código %d";
+    private static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe cadastro de cozinha com o código %d";
     @Autowired
     private RestauranteRepository restauranteRepository;
 
@@ -24,8 +25,10 @@ public class RestauranteService {
         return restauranteRepository.findAll();
     }
 
-    public Optional<Restaurante> buscar(Long id) {
-        return restauranteRepository.findById(id);
+    public Restaurante buscar(Long id) {
+        return restauranteRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id)));
     }
 
     public Restaurante salvar(Restaurante restaurante) {
@@ -33,7 +36,7 @@ public class RestauranteService {
 
         Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
                 .orElseThrow(()-> new EntidadeNaoEncontradaException(
-                        String.format("Não existe cadastro de cozinha com o código %d", cozinhaId)));
+                        String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
 
         restaurante.setCozinha(cozinha);
 

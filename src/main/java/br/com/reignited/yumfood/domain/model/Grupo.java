@@ -1,27 +1,26 @@
 package br.com.reignited.yumfood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "cozinha")
-public class Cozinha {
+@Table(name = "grupo")
+public class Grupo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome", length = 30, nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
+    @ManyToMany
+    @JoinTable(name = "grupo_permissao",
+            joinColumns = @JoinColumn(name = "grupo_id"),
+            inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+    private List<Permissao> permissoes;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cozinha")
-    private List<Restaurante> restaurantes;
-
-    public Cozinha() {
+    public Grupo() {
     }
 
     public Long getId() {
@@ -40,20 +39,20 @@ public class Cozinha {
         this.nome = nome;
     }
 
-    public List<Restaurante> getRestaurantes() {
-        return restaurantes;
+    public List<Permissao> getPermissoes() {
+        return permissoes;
     }
 
-    public void setRestaurantes(List<Restaurante> restaurantes) {
-        this.restaurantes = restaurantes;
+    public void setPermissoes(List<Permissao> permissoes) {
+        this.permissoes = permissoes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cozinha cozinha = (Cozinha) o;
-        return id.equals(cozinha.id);
+        if (!(o instanceof Grupo)) return false;
+        Grupo grupo = (Grupo) o;
+        return id.equals(grupo.id);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class Cozinha {
 
     @Override
     public String toString() {
-        return "Cozinha{" +
+        return "Grupo{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 '}';
