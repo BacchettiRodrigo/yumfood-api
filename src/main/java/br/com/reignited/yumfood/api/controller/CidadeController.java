@@ -1,6 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.reignited.yumfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.service.CidadeService;
@@ -33,8 +33,8 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return cidadeService.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
@@ -44,8 +44,8 @@ public class CidadeController {
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
         try {
             return cidadeService.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
