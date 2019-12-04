@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.exceptionhandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Problem {
@@ -12,6 +13,8 @@ public class Problem {
     private String detail;
     private String userMessage;
     private LocalDateTime timestamp;
+    private List<Object> objects;
+
 
     private Problem(ProblemBuilder problemBuilder) {
         this.status = problemBuilder.status;
@@ -20,6 +23,7 @@ public class Problem {
         this.detail = problemBuilder.detail;
         this.userMessage = problemBuilder.userMessage;
         this.timestamp = problemBuilder.timestamp;
+        this.objects = problemBuilder.objects;
     }
 
     public static ProblemBuilder builder() {
@@ -50,6 +54,56 @@ public class Problem {
         return timestamp;
     }
 
+    public List<Object> getObjects() {
+        return objects;
+    }
+
+    public static class Object {
+
+        private String name;
+        private String userMessage;
+
+        Object(ObjectBuilder objectBuilder) {
+            this.name = objectBuilder.name;
+            this.userMessage = objectBuilder.userMessage;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getUserMessage() {
+            return userMessage;
+        }
+
+        public static ObjectBuilder builder() {
+            return new ObjectBuilder();
+        }
+
+        public static class ObjectBuilder {
+
+            private String name;
+            private String userMessage;
+
+            ObjectBuilder() {
+            }
+
+            ObjectBuilder name(String name) {
+                this.name = name;
+                return this;
+            }
+
+            ObjectBuilder userMessage(String userMessage) {
+                this.userMessage = userMessage;
+                return this;
+            }
+
+            Object build() {
+                return new Object(this);
+            }
+        }
+    }
+
     public static class ProblemBuilder {
         private Integer status;
         private String type;
@@ -57,6 +111,7 @@ public class Problem {
         private String detail;
         private String userMessage;
         private LocalDateTime timestamp;
+        private List<Object> objects;
 
         ProblemBuilder() {
         }
@@ -81,13 +136,18 @@ public class Problem {
             return this;
         }
 
-        public ProblemBuilder userMessage(String userMessage) {
+        ProblemBuilder userMessage(String userMessage) {
             this.userMessage = userMessage;
             return this;
         }
 
-        public ProblemBuilder timestamp(LocalDateTime timestamp) {
+        ProblemBuilder timestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
+            return this;
+        }
+
+        ProblemBuilder objects(List<Object> objects) {
+            this.objects = objects;
             return this;
         }
 

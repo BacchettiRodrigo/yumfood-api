@@ -1,17 +1,14 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
-import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -32,12 +29,12 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+    public Cozinha adicionar(@Valid @RequestBody Cozinha cozinha) {
         return cozinhaService.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @Valid @RequestBody Cozinha cozinha) {
         Cozinha cozinhaAtual = cozinhaService.buscar(cozinhaId);
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 
