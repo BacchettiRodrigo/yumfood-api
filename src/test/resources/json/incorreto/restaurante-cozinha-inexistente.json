@@ -1,0 +1,7 @@
+{
+  "nome": "Restaurante Inovação",
+  "taxaFrete": 9.5,
+  "cozinha": {
+    "id": 1000
+  }
+}
