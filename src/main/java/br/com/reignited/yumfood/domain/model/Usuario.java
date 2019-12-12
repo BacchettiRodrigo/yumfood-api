@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class Usuario {
 
     @CreationTimestamp
     @Column(name = "data_cadastro", nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     @ManyToMany
     @JoinTable(name = "usuario_grupo",
@@ -69,11 +70,11 @@ public class Usuario {
         this.email = email;
     }
 
-    public LocalDateTime getDataCadastro() {
+    public OffsetDateTime getDataCadastro() {
         return dataCadastro;
     }
 
-    public void setDataCadastro(LocalDateTime dataCadastro) {
+    public void setDataCadastro(OffsetDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 

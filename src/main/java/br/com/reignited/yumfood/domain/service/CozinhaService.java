@@ -13,6 +13,7 @@ import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.repository.CozinhaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CozinhaService {
@@ -31,13 +32,16 @@ public class CozinhaService {
 				.orElseThrow(() -> new CozinhaNaoEncontradaException(id));
 	}
 
+	@Transactional
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.save(cozinha);
 	}
 
+	@Transactional
 	public void excluir(Long cozinhaId) {
 		try {
 			cozinhaRepository.deleteById(cozinhaId);
+			cozinhaRepository.flush();
 		} catch (EmptyResultDataAccessException ex) {
 			throw new CozinhaNaoEncontradaException(cozinhaId);
 		} catch (DataIntegrityViolationException ex) {

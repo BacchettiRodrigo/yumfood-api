@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.exceptionhandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,7 +13,7 @@ public class Problem {
     private String title;
     private String detail;
     private String userMessage;
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
     private List<Object> objects;
 
 
@@ -50,7 +51,7 @@ public class Problem {
         return userMessage;
     }
 
-    public LocalDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -110,7 +111,7 @@ public class Problem {
         private String title;
         private String detail;
         private String userMessage;
-        private LocalDateTime timestamp;
+        private OffsetDateTime timestamp;
         private List<Object> objects;
 
         ProblemBuilder() {
@@ -141,7 +142,7 @@ public class Problem {
             return this;
         }
 
-        ProblemBuilder timestamp(LocalDateTime timestamp) {
+        ProblemBuilder timestamp(OffsetDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }

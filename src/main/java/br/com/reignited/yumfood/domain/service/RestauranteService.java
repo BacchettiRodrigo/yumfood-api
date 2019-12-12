@@ -9,6 +9,7 @@ import br.com.reignited.yumfood.domain.repository.CozinhaRepository;
 import br.com.reignited.yumfood.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class RestauranteService {
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(id));
     }
 
+    @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
 
