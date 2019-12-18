@@ -6,7 +6,6 @@ import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.input.CozinhaInput;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.service.CozinhaService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,26 +21,26 @@ public class CozinhaController {
     private CozinhaService cozinhaService;
 
     @Autowired
-    private CozinhaModelAssembler cozinhaModelAssembler;
+    private CozinhaModelAssembler assembler;
 
     @Autowired
     private CozinhaInputDisassembler cozinhaInputDisassembler;
 
     @GetMapping
     public List<CozinhaModel> listar() {
-        return cozinhaModelAssembler.toCollectionModel(cozinhaService.listar());
+        return assembler.toCollectionModel(cozinhaService.listar());
     }
 
     @GetMapping("/{cozinhaId}")
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
-        return cozinhaModelAssembler.toModel(cozinhaService.buscar(cozinhaId));
+        return assembler.toModel(cozinhaService.buscar(cozinhaId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@Valid @RequestBody CozinhaInput cozinhaInput) {
         Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
-        return cozinhaModelAssembler.toModel(cozinhaService.salvar(cozinha));
+        return assembler.toModel(cozinhaService.salvar(cozinha));
     }
 
     @PutMapping("/{cozinhaId}")
@@ -52,7 +51,7 @@ public class CozinhaController {
 
         //BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 
-        return cozinhaModelAssembler.toModel(cozinhaService.salvar(cozinhaAtual));
+        return assembler.toModel(cozinhaService.salvar(cozinhaAtual));
     }
 
     @DeleteMapping("/{cozinhaId}")

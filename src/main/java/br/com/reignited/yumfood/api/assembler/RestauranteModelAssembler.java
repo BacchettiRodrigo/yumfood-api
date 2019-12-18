@@ -1,6 +1,5 @@
 package br.com.reignited.yumfood.api.assembler;
 
-import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;

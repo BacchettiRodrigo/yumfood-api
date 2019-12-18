@@ -32,11 +32,27 @@ public class RestauranteService {
     }
 
     @Transactional
+    public void ativar(Long restauranteId) {
+        Restaurante restaurante = restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+
+        restaurante.ativar();
+    }
+
+    @Transactional
+    public void inativar(Long restauranteId) {
+        Restaurante restaurante = restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+
+        restaurante.inativar();
+    }
+
+    @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
 
         Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-                .orElseThrow(()-> new CozinhaNaoEncontradaException(cozinhaId));
+                .orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
 
         restaurante.setCozinha(cozinha);
 

@@ -21,7 +21,7 @@ public class CozinhaModelAssembler {
                 .collect(Collectors.toList());
     }
 
-    public CozinhaModel toModel(Cozinha cozinha) {
-        return modelMapper.map(cozinha, CozinhaModel.class);
+    public CozinhaModel toModel(Cozinha restaurante) {
+        return modelMapper.map(restaurante, CozinhaModel.class);
     }
 }
