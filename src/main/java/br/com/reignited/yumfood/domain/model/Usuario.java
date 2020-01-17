@@ -1,13 +1,13 @@
 package br.com.reignited.yumfood.domain.model;
 
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -35,75 +35,11 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name = "grupo_id"))
     private List<Grupo> grupos;
 
-    public Usuario() {
+    public boolean senhaCoincideCom(String senha) {
+        return getSenha().equals(senha);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public OffsetDateTime getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(OffsetDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public List<Grupo> getGrupos() {
-        return grupos;
-    }
-
-    public void setGrupos(List<Grupo> grupos) {
-        this.grupos = grupos;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Usuario)) return false;
-        Usuario usuario = (Usuario) o;
-        return id.equals(usuario.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                '}';
+    public boolean senhaNaoCoincideCom(String senha) {
+        return !senhaCoincideCom(senha);
     }
 }

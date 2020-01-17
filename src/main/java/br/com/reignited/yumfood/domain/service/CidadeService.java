@@ -2,7 +2,6 @@ package br.com.reignited.yumfood.domain.service;
 
 import br.com.reignited.yumfood.domain.exception.CidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
-import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.model.Estado;

@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.model.input;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -19,12 +20,11 @@ public class RestauranteInput {
     @PositiveOrZero
     private BigDecimal taxaFrete;
 
+    @Valid
     @NotNull
     private CozinhaIdInput cozinha;
 
-    @Getter
-    @Setter
-    public class CozinhaIdInput {
-        private Long id;
-    }
+    @Valid
+    @NotNull
+    private EnderecoInput endereco;
 }
