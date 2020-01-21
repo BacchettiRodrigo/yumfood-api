@@ -1,6 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.assembler.CidadeInputDisassembler;
+import br.com.reignited.yumfood.api.disassembler.CidadeInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.CidadeModelAssembler;
 import br.com.reignited.yumfood.api.model.CidadeModel;
 import br.com.reignited.yumfood.api.model.input.CidadeInput;
@@ -8,7 +8,6 @@ import br.com.reignited.yumfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.service.CidadeService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,7 @@ public class CidadeController {
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@Valid @RequestBody CidadeInput cidadeInput) {
         try {
-            Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
+            Cidade cidade = cidadeInputDisassembler.toDomainModel(cidadeInput);
             return cidadeModelAssembler.toModel(cidadeService.salvar(cidade));
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);

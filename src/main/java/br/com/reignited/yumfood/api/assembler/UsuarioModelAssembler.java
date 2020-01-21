@@ -6,21 +6,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UsuarioModelAssembler {
+public class UsuarioModelAssembler extends Assembler<UsuarioModel, Usuario> {
 
-    @Autowired
-    private ModelMapper mapper;
-
-    public UsuarioModel toModel(Usuario usuario) {
-        return mapper.map(usuario, UsuarioModel.class);
+    @Override
+    public UsuarioModel toModel(Usuario source) {
+        return mapper.map(source, UsuarioModel.class);
     }
 
-    public List<UsuarioModel> toColletionModel(List<Usuario> usuarios) {
-        return usuarios.stream()
+    @Override
+    public List<UsuarioModel> toCollectionModel(Collection<Usuario> source) {
+        return source.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
     }

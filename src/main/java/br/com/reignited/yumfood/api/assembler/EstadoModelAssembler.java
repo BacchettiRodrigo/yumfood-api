@@ -6,22 +6,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class EstadoModelAssembler {
+public class EstadoModelAssembler extends Assembler<EstadoModel, Estado>{
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public EstadoModel toModel(Estado estado) {
-        return modelMapper.map(estado, EstadoModel.class);
+    @Override
+    public EstadoModel toModel(Estado source) {
+        return mapper.map(source, EstadoModel.class);
     }
 
-    public List<EstadoModel> toCollectionModel(List<Estado> estados) {
-        return estados.stream()
-                .map(estado -> toModel(estado))
+    @Override
+    public List<EstadoModel> toCollectionModel(Collection<Estado> source) {
+        return source.stream()
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 }

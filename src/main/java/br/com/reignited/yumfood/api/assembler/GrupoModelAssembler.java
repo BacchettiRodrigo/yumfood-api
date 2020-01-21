@@ -2,26 +2,24 @@ package br.com.reignited.yumfood.api.assembler;
 
 import br.com.reignited.yumfood.api.model.GrupoModel;
 import br.com.reignited.yumfood.domain.model.Grupo;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class GrupoModelAssembler {
+public class GrupoModelAssembler extends Assembler<GrupoModel, Grupo> {
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public GrupoModel toModel(Grupo grupo) {
-        return modelMapper.map(grupo, GrupoModel.class);
+    @Override
+    public GrupoModel toModel(Grupo source) {
+        return mapper.map(source, GrupoModel.class);
     }
 
-    public List<GrupoModel> toCollectionModel(List<Grupo> grupos) {
-        return grupos.stream()
-                .map(grupo -> toModel(grupo))
+    @Override
+    public List<GrupoModel> toCollectionModel(Collection<Grupo> source) {
+        return source.stream()
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 }

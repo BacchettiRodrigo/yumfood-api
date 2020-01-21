@@ -1,12 +1,11 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.assembler.GrupoInputDisassembler;
+import br.com.reignited.yumfood.api.disassembler.GrupoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.GrupoModelAssembler;
 import br.com.reignited.yumfood.api.model.GrupoModel;
 import br.com.reignited.yumfood.api.model.input.GrupoInput;
 import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +40,7 @@ public class GrupoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel adicionar(@Valid @RequestBody GrupoInput grupoInput) {
-        Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput);
+        Grupo grupo = grupoInputDisassembler.toDomainModel(grupoInput);
         return grupoModelAssembler.toModel(grupoService.salvar(grupo));
     }
 

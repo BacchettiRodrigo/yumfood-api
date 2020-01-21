@@ -6,22 +6,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CozinhaModelAssembler {
+public class CozinhaModelAssembler extends Assembler<CozinhaModel, Cozinha> {
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public List<CozinhaModel> toCollectionModel(List<Cozinha> cozinhas) {
-        return cozinhas.stream()
-                .map(cozinha -> toModel(cozinha))
-                .collect(Collectors.toList());
+    @Override
+    public CozinhaModel toModel(Cozinha source) {
+        return mapper.map(source, CozinhaModel.class);
     }
 
-    public CozinhaModel toModel(Cozinha restaurante) {
-        return modelMapper.map(restaurante, CozinhaModel.class);
+    @Override
+    public List<CozinhaModel> toCollectionModel(Collection<Cozinha> source) {
+        return source.stream()
+                .map(this::toModel)
+                .collect(Collectors.toList());
     }
 }

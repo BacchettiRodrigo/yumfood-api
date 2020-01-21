@@ -56,12 +56,23 @@ public class Restaurante {
     @Column(name = "ativo", nullable = false)
     private Boolean ativo = Boolean.TRUE;
 
+    @Column(name = "aberto", nullable = false)
+    private Boolean aberto = Boolean.TRUE;
+
     public void ativar() {
         setAtivo(true);
     }
 
     public void inativar() {
         setAtivo(false);
+    }
+
+    public void abrir() {
+        setAberto(true);
+    }
+
+    public void fechar() {
+        setAberto(false);
     }
 
     public boolean removerFormaPagamento(FormaPagamento formaPagamento) {

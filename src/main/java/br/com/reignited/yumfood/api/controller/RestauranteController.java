@@ -1,16 +1,13 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.assembler.RestauranteInputDisassembler;
+import br.com.reignited.yumfood.api.disassembler.RestauranteInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.RestauranteModelAssembler;
-import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
-import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.SmartValidator;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -53,7 +49,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModel adicionar(@Valid @RequestBody RestauranteInput restauranteInput) {
         try {
-            Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteInputDisassembler.toDomainModel(restauranteInput);
             return restauranteModelAssembler.toModel(restauranteService.salvar(restaurante));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
@@ -65,7 +61,7 @@ public class RestauranteController {
             (@PathVariable Long restauranteId, @Valid @RequestBody RestauranteInput restauranteInput) {
 
         try {
-            Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteInputDisassembler.toDomainModel(restauranteInput);
 
             Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
 
@@ -83,10 +79,21 @@ public class RestauranteController {
         restauranteService.ativar(restauranteId);
     }
 
-    @DeleteMapping("/{restauranteId}/ativo")
+    @DeleteMapping("/{restauranteId}/inativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
     }
 
+    @PutMapping("/{restauranteId}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long restauranteId) {
+        restauranteService.abrir(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long restauranteId) {
+        restauranteService.fechar(restauranteId);
+    }
 }

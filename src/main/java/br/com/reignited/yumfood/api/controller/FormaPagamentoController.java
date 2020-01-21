@@ -1,6 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.assembler.FormaPagamentoInputDisassembler;
+import br.com.reignited.yumfood.api.disassembler.FormaPagamentoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.model.input.FormaPagamentoInput;
@@ -39,7 +39,7 @@ public class FormaPagamentoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@Valid @RequestBody FormaPagamentoInput input) {
-        FormaPagamento formaPagamento = disassembler.toDomainObject(input);
+        FormaPagamento formaPagamento = disassembler.toDomainModel(input);
         return assembler.toModel(service.salvar(formaPagamento));
     }
 

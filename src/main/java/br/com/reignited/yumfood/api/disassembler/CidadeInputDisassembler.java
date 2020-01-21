@@ -1,25 +1,26 @@
-package br.com.reignited.yumfood.api.assembler;
+package br.com.reignited.yumfood.api.disassembler;
 
 import br.com.reignited.yumfood.api.model.input.CidadeInput;
+import br.com.reignited.yumfood.api.model.input.ProdutoInput;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.model.Estado;
+import br.com.reignited.yumfood.domain.model.Produto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CidadeInputDisassembler {
+public class CidadeInputDisassembler extends Disassembler<Cidade, CidadeInput> {
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public Cidade toDomainObject(CidadeInput cidadeInput) {
-        return modelMapper.map(cidadeInput, Cidade.class);
+    @Override
+    public Cidade toDomainModel(CidadeInput source) {
+        return mapper.map(source, Cidade.class);
     }
 
+    @Override
     public void copyToDomainObject(CidadeInput cidadeInput, Cidade cidade) {
         cidade.setEstado(new Estado());
 
-        modelMapper.map(cidadeInput, cidade);
+        mapper.map(cidadeInput, cidade);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.assembler.CozinhaInputDisassembler;
+import br.com.reignited.yumfood.api.disassembler.CozinhaInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.CozinhaModelAssembler;
 import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.input.CozinhaInput;
@@ -39,7 +39,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@Valid @RequestBody CozinhaInput cozinhaInput) {
-        Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+        Cozinha cozinha = cozinhaInputDisassembler.toDomainModel(cozinhaInput);
         return assembler.toModel(cozinhaService.salvar(cozinha));
     }
 
