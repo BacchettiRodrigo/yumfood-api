@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.domain.service;
 import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.exception.UsuarioNaoEncontradoException;
+import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import br.com.reignited.yumfood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private GrupoService grupoService;
 
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
@@ -65,5 +69,19 @@ public class UsuarioService {
         } catch (EmptyResultDataAccessException ex) {
             throw new UsuarioNaoEncontradoException(usuarioId);
         }
+    }
+
+    @Transactional
+    public void associarGrupo (Long usuarioId, Long grupoId) {
+        Usuario usuario = buscar(usuarioId);
+        Grupo grupo = grupoService.buscar(grupoId);
+        usuario.adicionarGrupo(grupo);
+    }
+
+    @Transactional
+    public void desassociarGrupo (Long usuarioId, Long grupoId) {
+        Usuario usuario = buscar(usuarioId);
+        Grupo grupo = grupoService.buscar(grupoId);
+        usuario.removerGrupo(grupo);
     }
 }

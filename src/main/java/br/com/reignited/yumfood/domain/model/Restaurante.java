@@ -39,6 +39,12 @@ public class Restaurante {
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private Set<Usuario> reponsaveis = new HashSet<>();
+
     @Embedded
     private Endereco endereco;
 
@@ -81,5 +87,17 @@ public class Restaurante {
 
     public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
         return getFormasPagamento().add(formaPagamento);
+    }
+
+    public boolean adicionarResponsavel (Usuario usuario) {
+        return getReponsaveis().add(usuario);
+    }
+
+    public boolean removerResponsavel (Usuario usuario) {
+        return getReponsaveis().remove(usuario);
+    }
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().contains(formaPagamento);
     }
 }

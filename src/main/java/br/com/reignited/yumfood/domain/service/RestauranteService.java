@@ -4,10 +4,7 @@ import br.com.reignited.yumfood.domain.exception.CidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.RestauranteNaoEncontradoException;
-import br.com.reignited.yumfood.domain.model.Cidade;
-import br.com.reignited.yumfood.domain.model.Cozinha;
-import br.com.reignited.yumfood.domain.model.FormaPagamento;
-import br.com.reignited.yumfood.domain.model.Restaurante;
+import br.com.reignited.yumfood.domain.model.*;
 import br.com.reignited.yumfood.domain.repository.CidadeRepository;
 import br.com.reignited.yumfood.domain.repository.CozinhaRepository;
 import br.com.reignited.yumfood.domain.repository.RestauranteRepository;
@@ -32,6 +29,9 @@ public class RestauranteService {
     @Autowired
     private FormaPagamentoService formaPagamentoService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public List<Restaurante> listar() {
         return restauranteRepository.findAll();
     }
@@ -50,11 +50,21 @@ public class RestauranteService {
     }
 
     @Transactional
+    public void ativar(List<Long> restauranteIds) {
+        restauranteIds.forEach(this::ativar);
+    }
+
+    @Transactional
     public void inativar(Long restauranteId) {
         Restaurante restaurante = restauranteRepository.findById(restauranteId)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
 
         restaurante.inativar();
+    }
+
+    @Transactional
+    public void inativar(List<Long> restauranteIds) {
+        restauranteIds.forEach(this::inativar);
     }
 
     @Transactional
@@ -105,4 +115,22 @@ public class RestauranteService {
 
         restaurante.adicionarFormaPagamento(formaPagamento);
     }
+
+    @Transactional
+    public void adicionarResponsavel (Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscar(restauranteId);
+        Usuario usuario = usuarioService.buscar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
+    }
+
+    @Transactional
+    public void removerResponsavel (Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscar(restauranteId);
+        Usuario usuario = usuarioService.buscar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
+    }
+
+
 }

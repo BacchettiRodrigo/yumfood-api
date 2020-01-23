@@ -27,10 +27,10 @@ public class Grupo {
     private Set<Permissao> permissoes = new HashSet<>();
 
     public boolean adicionarPermissao(Permissao permissao) {
-        return this.permissoes.add(permissao);
+        return getPermissoes().add(permissao);
     }
 
     public boolean removerPermissao(Permissao permissao) {
-        return this.permissoes.remove(permissao);
+        return getPermissoes().remove(permissao);
     }
 }
