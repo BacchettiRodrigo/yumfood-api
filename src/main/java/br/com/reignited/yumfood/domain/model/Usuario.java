@@ -1,12 +1,15 @@
 package br.com.reignited.yumfood.domain.model;
 
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -26,83 +29,27 @@ public class Usuario {
 
     @CreationTimestamp
     @Column(name = "data_cadastro", nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     @ManyToMany
     @JoinTable(name = "usuario_grupo",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-    private List<Grupo> grupos;
+    private Set<Grupo> grupos = new HashSet<>();
 
-    public Usuario() {
+    public boolean adicionarGrupo (Grupo grupo) {
+        return getGrupos().add(grupo);
     }
 
-    public Long getId() {
-        return id;
+    public boolean removerGrupo (Grupo grupo) {
+        return getGrupos().remove(grupo);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean senhaCoincideCom(String senha) {
+        return getSenha().equals(senha);
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDateTime getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(LocalDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public List<Grupo> getGrupos() {
-        return grupos;
-    }
-
-    public void setGrupos(List<Grupo> grupos) {
-        this.grupos = grupos;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Usuario)) return false;
-        Usuario usuario = (Usuario) o;
-        return id.equals(usuario.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                '}';
+    public boolean senhaNaoCoincideCom(String senha) {
+        return !senhaCoincideCom(senha);
     }
 }

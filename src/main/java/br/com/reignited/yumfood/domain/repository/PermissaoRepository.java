@@ -1,8 +1,10 @@
 package br.com.reignited.yumfood.domain.repository;
 
 import br.com.reignited.yumfood.domain.model.Permissao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.reignited.yumfood.domain.repository.custom.CustomJpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PermissaoRepository extends JpaRepository<Permissao, Long> {
+@Repository
+public interface PermissaoRepository extends CustomJpaRepository<Permissao, Long> {
 
 }
