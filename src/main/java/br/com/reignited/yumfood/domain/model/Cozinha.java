@@ -1,8 +1,11 @@
 package br.com.reignited.yumfood.domain.model;
 
+import br.com.reignited.yumfood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,10 +13,12 @@ import java.util.Objects;
 @Table(name = "cozinha")
 public class Cozinha {
 
+    @NotNull(groups = Groups.CozinhaId.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank()
     @Column(name = "nome", length = 30, nullable = false)
     private String nome;
 

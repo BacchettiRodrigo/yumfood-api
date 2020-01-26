@@ -1,8 +1,10 @@
 package br.com.reignited.yumfood.domain.repository;
 
 import br.com.reignited.yumfood.domain.model.Estado;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.reignited.yumfood.domain.repository.custom.CustomJpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EstadoRepository extends JpaRepository<Estado, Long> {
+@Repository
+public interface EstadoRepository extends CustomJpaRepository<Estado, Long> {
 
 }

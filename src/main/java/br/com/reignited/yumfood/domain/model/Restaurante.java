@@ -1,20 +1,24 @@
 package br.com.reignited.yumfood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "restaurante")
 public class Restaurante {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,131 +29,75 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-    //@JsonIgnoreProperties("hibernateLazyInitializer")
-    //@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-    private List<FormaPagamento> formasPagamento;
+    private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
-    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private Set<Usuario> reponsaveis = new HashSet<>();
+
     @Embedded
     private Endereco endereco;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime(6)")
-    private LocalDateTime dataAtualizacao;
+    private OffsetDateTime dataAtualizacao;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos;
 
-    public Restaurante() {
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo = Boolean.TRUE;
 
+    @Column(name = "aberto", nullable = false)
+    private Boolean aberto = Boolean.TRUE;
+
+    public void ativar() {
+        setAtivo(true);
     }
 
-    public Long getId() {
-        return id;
+    public void inativar() {
+        setAtivo(false);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void abrir() {
+        setAberto(true);
     }
 
-    public String getNome() {
-        return nome;
+    public void fechar() {
+        setAberto(false);
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().remove(formaPagamento);
     }
 
-    public BigDecimal getTaxaFrete() {
-        return taxaFrete;
+    public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().add(formaPagamento);
     }
 
-    public void setTaxaFrete(BigDecimal taxaFrete) {
-        this.taxaFrete = taxaFrete;
+    public boolean adicionarResponsavel (Usuario usuario) {
+        return getReponsaveis().add(usuario);
     }
 
-    public Cozinha getCozinha() {
-        return cozinha;
+    public boolean removerResponsavel (Usuario usuario) {
+        return getReponsaveis().remove(usuario);
     }
 
-    public void setCozinha(Cozinha cozinha) {
-        this.cozinha = cozinha;
-    }
-
-    public List<FormaPagamento> getFormasPagamento() {
-        return formasPagamento;
-    }
-
-    public void setFormasPagamento(List<FormaPagamento> formasPagamento) {
-        this.formasPagamento = formasPagamento;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
-    public LocalDateTime getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(LocalDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
-
-    public List<Produto> getProdutos() {
-        return produtos;
-    }
-
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Restaurante)) return false;
-        Restaurante that = (Restaurante) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurante{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                '}';
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().contains(formaPagamento);
     }
 }
