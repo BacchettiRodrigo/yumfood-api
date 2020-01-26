@@ -7,4 +7,5 @@ import java.util.List;
 public interface RestauranteRepositoryCustom {
 
     List<Restaurante> findComFreteGratis(String nome);
+
 }
