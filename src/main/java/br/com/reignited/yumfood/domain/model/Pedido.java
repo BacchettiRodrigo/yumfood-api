@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,6 +24,9 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "codigo")
+    private String codigo;
 
     @ManyToOne
     @JoinColumn(name = "restaurante_id", nullable = false)
@@ -99,6 +103,11 @@ public class Pedido {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         setValorTotal(getSubtotal().add(getTaxaFrete()));
+    }
+
+    @PrePersist
+    private void gerarCodigo(){
+        setCodigo(UUID.randomUUID().toString());
     }
 
 }
