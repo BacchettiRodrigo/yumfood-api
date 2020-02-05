@@ -6,12 +6,21 @@ import br.com.reignited.yumfood.api.disassembler.PedidoInputDisassembler;
 import br.com.reignited.yumfood.api.model.PedidoModel;
 import br.com.reignited.yumfood.api.model.PedidoResumoModel;
 import br.com.reignited.yumfood.api.model.input.PedidoInput;
+import br.com.reignited.yumfood.core.data.PageableTranslator;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.model.Pedido;
 import br.com.reignited.yumfood.domain.model.Usuario;
+import br.com.reignited.yumfood.domain.repository.PedidoRepository;
+import br.com.reignited.yumfood.domain.filter.PedidoFilter;
 import br.com.reignited.yumfood.domain.service.PedidoService;
+import br.com.reignited.yumfood.infrastructure.repository.specs.PedidoSpecs;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +35,9 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @Autowired
+    private PedidoRepository  pedidoRepository;
+
+    @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
 
     @Autowired
@@ -35,8 +47,11 @@ public class PedidoController {
     private PedidoInputDisassembler pedidoInputDisassembler;
 
     @GetMapping
-    public List<PedidoResumoModel> listar () {
-        return pedidoResumoModelAssembler.toCollectionModel(pedidoService.listar());
+    public Page<PedidoResumoModel> pesquisar (PedidoFilter filtro, @PageableDefault(size = 1) Pageable pageable) {
+        pageable = traduzirPageable(pageable);
+        Page<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        List<PedidoResumoModel> pedidoResumo = pedidoResumoModelAssembler.toCollectionModel(pedidos.getContent());
+        return new PageImpl<>(pedidoResumo, pageable, pedidos.getTotalElements());
     }
 
     @GetMapping("/{codigoPedido}")
@@ -82,4 +97,15 @@ public class PedidoController {
     public void cancelar(@PathVariable String codigoPedido) {
         pedidoService.cancelar(codigoPedido);
     }
+
+    private Pageable traduzirPageable(Pageable apiPageable) {
+        var mapeamanto = ImmutableMap.of(
+                "codigo", "codigo",
+                "restaurante.nome", "restaurante.nome",
+                "cliente.nome",  "cliente.nome",
+                "valorTotal", "valorTotal"
+        );
+        return PageableTranslator.translate(apiPageable, mapeamanto);
+    }
+
 }

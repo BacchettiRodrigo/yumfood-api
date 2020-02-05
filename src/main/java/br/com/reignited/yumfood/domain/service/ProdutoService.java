@@ -25,6 +25,10 @@ public class ProdutoService {
         return produtoRepository.findByRestaurante(restaurante);
     }
 
+    public List<Produto> buscarAtivosPorRestaurante(Restaurante restaurante) {
+        return produtoRepository.findAtivosByRestaurante(restaurante);
+    }
+
     @Transactional
     public Produto salvar (Produto produto) {
         return produtoRepository.save(produto);

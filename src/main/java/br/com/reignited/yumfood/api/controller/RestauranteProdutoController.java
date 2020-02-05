@@ -32,10 +32,18 @@ public class RestauranteProdutoController {
     private ProdutoInputDisassembler produtoInputDisassembler;
 
     @GetMapping
-    public List<ProdutoModel> listar(@PathVariable Long restauranteId) {
-        Restaurante restaurante = restauranteService.buscar(restauranteId);
+    public List<ProdutoModel> listar(
+            @PathVariable Long restauranteId,
+            @RequestParam(name = "incluir-inativos", required = false) boolean incluirInativos) {
 
-        List<Produto> produtos = produtoService.buscarProdutosPorRestaurante(restaurante);
+        Restaurante restaurante = restauranteService.buscar(restauranteId);
+        List<Produto> produtos;
+
+        if (incluirInativos) {
+            produtos = produtoService.buscarProdutosPorRestaurante(restaurante);
+        } else {
+            produtos = produtoService.buscarAtivosPorRestaurante(restaurante);
+        }
 
         return produtoModelAssembler.toCollectionModel(produtos);
     }
@@ -48,7 +56,7 @@ public class RestauranteProdutoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoModel adicionar (@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
+    public ProdutoModel adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
         Restaurante restaurante = restauranteService.buscar(restauranteId);
 
         Produto produto = produtoInputDisassembler.toDomainModel(produtoInput);
@@ -59,7 +67,7 @@ public class RestauranteProdutoController {
     }
 
     @PutMapping("/{produtoId}")
-    public ProdutoModel atualizar (
+    public ProdutoModel atualizar(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
             @RequestBody @Valid ProdutoInput produtoInput) {

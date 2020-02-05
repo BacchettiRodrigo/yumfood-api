@@ -2,6 +2,7 @@ package br.com.reignited.yumfood.domain.repository;
 
 import br.com.reignited.yumfood.domain.model.Pedido;
 import br.com.reignited.yumfood.domain.repository.custom.CustomJpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PedidoRepository extends CustomJpaRepository<Pedido, Long> {
+public interface PedidoRepository extends CustomJpaRepository<Pedido, Long>, JpaSpecificationExecutor<Pedido> {
 
     Optional<Pedido> findByCodigo(String codigo);
 

@@ -7,6 +7,8 @@ import br.com.reignited.yumfood.domain.exception.CozinhaNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.reignited.yumfood.domain.exception.EntidadeEmUsoException;
@@ -23,8 +25,8 @@ public class CozinhaService {
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 
-	public List<Cozinha> listar() {
-		return cozinhaRepository.findAll();
+	public Page<Cozinha> listar(Pageable pageable) {
+		return cozinhaRepository.findAll(pageable);
 	}
 
 	public Cozinha buscar(Long id) {

@@ -4,13 +4,16 @@ import br.com.reignited.yumfood.api.disassembler.RestauranteInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.RestauranteModelAssembler;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
+import br.com.reignited.yumfood.api.model.view.RestauranteView;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +36,16 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteModel> listar() {
         return restauranteModelAssembler.toCollectionModel(restauranteService.listar());
+    }
+
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=resumo")
+    public List<RestauranteModel> listarApenasNome() {
+        return listar();
     }
 
     @GetMapping("/{restauranteId}")
