@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @Entity
@@ -31,4 +30,12 @@ public class FotoProduto {
 
     @Column(name = "tamanho")
     private Long tamanho;
+
+    public Long getRestauranteId() {
+        if (getProduto() != null) {
+            return getProduto().getRestaurante().getId();
+        }
+
+        return null;
+    }
 }

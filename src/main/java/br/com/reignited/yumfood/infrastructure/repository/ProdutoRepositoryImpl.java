@@ -19,4 +19,10 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryCustom {
     public FotoProduto save(FotoProduto foto) {
         return manager.merge(foto);
     }
+
+    @Transactional
+    @Override
+    public void delete(FotoProduto foto) {
+        manager.remove(foto);
+    }
 }
