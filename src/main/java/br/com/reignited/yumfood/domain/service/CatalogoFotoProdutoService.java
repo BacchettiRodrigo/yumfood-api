@@ -44,11 +44,19 @@ public class CatalogoFotoProdutoService {
 
         FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto.builder()
                 .nomeArquivo(foto.getNomeArquivo())
+                .contentType(foto.getContentType())
                 .inputStream(dadosArquivo)
                 .build();
 
         fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 
         return foto;
+    }
+
+    @Transactional
+    public void deletar(Long restauranteId, Long produtoId) {
+        FotoProduto fotoProduto = buscar(restauranteId, produtoId);
+        produtoRepository.delete(fotoProduto);
+        fotoStorageService.remover(fotoProduto.getNomeArquivo());
     }
 }
