@@ -56,6 +56,8 @@ public class PedidoService {
     public void confirmar(String codigo) {
         Pedido pedido = buscar(codigo);
         pedido.confirmar();
+
+        pedidoRepository.save(pedido);
     }
 
     @Transactional
@@ -68,6 +70,8 @@ public class PedidoService {
     public void cancelar(String codigo) {
         Pedido pedido = buscar(codigo);
         pedido.cancelar();
+
+        pedidoRepository.save(pedido);
     }
 
     public void validarPedido(Pedido pedido) {
