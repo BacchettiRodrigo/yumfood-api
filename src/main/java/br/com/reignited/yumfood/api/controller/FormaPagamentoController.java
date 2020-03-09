@@ -4,6 +4,7 @@ import br.com.reignited.yumfood.api.disassembler.FormaPagamentoInputDisassembler
 import br.com.reignited.yumfood.api.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.model.input.FormaPagamentoInput;
+import br.com.reignited.yumfood.api.openapi.controller.FormaPagamentoOpenApi;
 import br.com.reignited.yumfood.domain.model.FormaPagamento;
 import br.com.reignited.yumfood.domain.service.FormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/formas-pagamento")
-public class FormaPagamentoController {
+public class FormaPagamentoController implements FormaPagamentoOpenApi {
 
     @Autowired
     private FormaPagamentoService formaPagamentoService;

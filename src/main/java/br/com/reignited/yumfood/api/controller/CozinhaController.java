@@ -4,6 +4,7 @@ import br.com.reignited.yumfood.api.disassembler.CozinhaInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.CozinhaModelAssembler;
 import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.input.CozinhaInput;
+import br.com.reignited.yumfood.api.openapi.controller.CozinhaControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.service.CozinhaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaService cozinhaService;

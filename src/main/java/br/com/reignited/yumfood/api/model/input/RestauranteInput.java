@@ -1,5 +1,6 @@
 package br.com.reignited.yumfood.api.model.input;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +14,11 @@ import java.math.BigDecimal;
 @Setter
 public class RestauranteInput {
 
+    @ApiModelProperty(example = "Thai Gourmet", required = true)
     @NotBlank
     private String nome;
 
+    @ApiModelProperty(example = "15.00")
     @NotNull
     @PositiveOrZero
     private BigDecimal taxaFrete;

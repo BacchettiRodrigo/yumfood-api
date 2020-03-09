@@ -2,6 +2,7 @@ package br.com.reignited.yumfood.api.controller;
 
 import br.com.reignited.yumfood.api.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
+import br.com.reignited.yumfood.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/formas-pagamento")
-public class RestauranteFormaPagamentoController {
+public class RestauranteFormaPagamentoController implements RestauranteFormaPagamentoControllerOpenApi {
 
     @Autowired
     private RestauranteService restauranteService;

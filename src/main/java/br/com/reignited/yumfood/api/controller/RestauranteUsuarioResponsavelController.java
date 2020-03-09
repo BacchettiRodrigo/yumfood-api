@@ -2,6 +2,7 @@ package br.com.reignited.yumfood.api.controller;
 
 import br.com.reignited.yumfood.api.assembler.UsuarioModelAssembler;
 import br.com.reignited.yumfood.api.model.UsuarioModel;
+import br.com.reignited.yumfood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioResponsavelController {
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
     @Autowired
     private RestauranteService restauranteService;

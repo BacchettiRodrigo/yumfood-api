@@ -1,5 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.reignited.yumfood.api.disassembler.CidadeInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.CidadeModelAssembler;
 import br.com.reignited.yumfood.api.model.CidadeModel;
@@ -10,14 +11,15 @@ import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.service.CidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cidades")
-public class CidadeController {
+@RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CidadeController implements CidadeControllerOpenApi {
 
     @Autowired
     private CidadeService cidadeService;

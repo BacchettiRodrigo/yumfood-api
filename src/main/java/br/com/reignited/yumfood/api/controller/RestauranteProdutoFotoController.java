@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.controller;
 import br.com.reignited.yumfood.api.assembler.FotoProdutoModelAssembler;
 import br.com.reignited.yumfood.api.model.FotoProdutoModel;
 import br.com.reignited.yumfood.api.model.input.FotoProdutoInput;
+import br.com.reignited.yumfood.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.model.FotoProduto;
 import br.com.reignited.yumfood.domain.model.Produto;
@@ -25,8 +26,8 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteProdutoFotoController {
+@RequestMapping(path = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProdutoService;
@@ -40,13 +41,13 @@ public class RestauranteProdutoFotoController {
     @Autowired
     private FotoStorageService fotoStorageService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public FotoProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoProdutoService.buscar(restauranteId, produtoId);
         return fotoProdutoModelAssembler.toModel(fotoProduto);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servirFoto(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
@@ -92,9 +93,10 @@ public class RestauranteProdutoFotoController {
     public FotoProdutoModel atualizarFoto(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
-            @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
+            @Valid FotoProdutoInput fotoProdutoInput,
+            @RequestPart(required = true) MultipartFile arquivo) throws IOException {
 
-        MultipartFile arquivo = fotoProdutoInput.getArquivo();
+        //MultipartFile arquivo = fotoProdutoInput.getArquivo();
         Produto produto = produtoService.buscar(restauranteId, produtoId);
 
         FotoProduto foto = new FotoProduto();
@@ -110,7 +112,7 @@ public class RestauranteProdutoFotoController {
 
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    public void excluir(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProdutoService.deletar(restauranteId, produtoId);
     }
 }

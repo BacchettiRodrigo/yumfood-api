@@ -1,5 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.openapi.controller.GrupoControllerOpenApi;
 import br.com.reignited.yumfood.api.disassembler.GrupoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.GrupoModelAssembler;
 import br.com.reignited.yumfood.api.model.GrupoModel;
@@ -8,14 +9,15 @@ import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/grupos")
-public class GrupoController {
+@RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoService grupoService;

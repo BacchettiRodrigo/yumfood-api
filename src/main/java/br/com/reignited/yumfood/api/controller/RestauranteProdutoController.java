@@ -4,6 +4,7 @@ import br.com.reignited.yumfood.api.disassembler.ProdutoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.ProdutoModelAssembler;
 import br.com.reignited.yumfood.api.model.ProdutoModel;
 import br.com.reignited.yumfood.api.model.input.ProdutoInput;
+import br.com.reignited.yumfood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Produto;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.ProdutoService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutoController {
+public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 
     @Autowired
     private RestauranteService restauranteService;

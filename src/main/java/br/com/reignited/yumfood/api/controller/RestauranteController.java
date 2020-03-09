@@ -5,12 +5,17 @@ import br.com.reignited.yumfood.api.assembler.RestauranteModelAssembler;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
 import br.com.reignited.yumfood.api.model.view.RestauranteView;
+import br.com.reignited.yumfood.api.openapi.controller.RestauranteControllerOpenApi;
+import br.com.reignited.yumfood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -22,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantes")
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteService restauranteService;

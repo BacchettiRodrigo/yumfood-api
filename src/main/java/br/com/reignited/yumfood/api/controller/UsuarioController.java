@@ -7,18 +7,20 @@ import br.com.reignited.yumfood.api.model.UsuarioModel;
 import br.com.reignited.yumfood.api.model.input.SenhaInput;
 import br.com.reignited.yumfood.api.model.input.UsuarioComSenhaInput;
 import br.com.reignited.yumfood.api.model.input.UsuarioInput;
+import br.com.reignited.yumfood.api.openapi.controller.UsuarioControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import br.com.reignited.yumfood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired
     private UsuarioService usuarioService;

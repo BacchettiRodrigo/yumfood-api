@@ -1,5 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.openapi.controller.EstatisticasControllerOpenApi;
 import br.com.reignited.yumfood.domain.filter.VendaDiariaFilter;
 import br.com.reignited.yumfood.domain.model.dto.VendaDiaria;
 import br.com.reignited.yumfood.domain.service.VendaQueryService;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/estatisticas")
-public class EstatisticasController {
+@RequestMapping(path = "/estatisticas")
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired
     private VendaQueryService vendaQueryService;

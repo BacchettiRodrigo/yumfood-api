@@ -6,6 +6,7 @@ import br.com.reignited.yumfood.api.disassembler.PedidoInputDisassembler;
 import br.com.reignited.yumfood.api.model.PedidoModel;
 import br.com.reignited.yumfood.api.model.PedidoResumoModel;
 import br.com.reignited.yumfood.api.model.input.PedidoInput;
+import br.com.reignited.yumfood.api.openapi.controller.PedidoControllerOpenApi;
 import br.com.reignited.yumfood.core.data.PageableTranslator;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
@@ -16,6 +17,8 @@ import br.com.reignited.yumfood.domain.filter.PedidoFilter;
 import br.com.reignited.yumfood.domain.service.PedidoService;
 import br.com.reignited.yumfood.infrastructure.repository.specs.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,13 +32,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoService pedidoService;
 
     @Autowired
-    private PedidoRepository  pedidoRepository;
+    private PedidoRepository pedidoRepository;
 
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
@@ -46,8 +49,12 @@ public class PedidoController {
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Nomes das propriedades para filtrar a resposta, separados por vírgula",
+                    name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping
-    public Page<PedidoResumoModel> pesquisar (PedidoFilter filtro, @PageableDefault(size = 1) Pageable pageable) {
+    public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 1) Pageable pageable) {
         pageable = traduzirPageable(pageable);
         Page<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
         List<PedidoResumoModel> pedidoResumo = pedidoResumoModelAssembler.toCollectionModel(pedidos.getContent());
@@ -55,7 +62,7 @@ public class PedidoController {
     }
 
     @GetMapping("/{codigoPedido}")
-    public PedidoModel buscar (@PathVariable String codigoPedido) {
+    public PedidoModel buscar(@PathVariable String codigoPedido) {
         return pedidoModelAssembler.toModel(pedidoService.buscar(codigoPedido));
     }
 
@@ -102,7 +109,7 @@ public class PedidoController {
         var mapeamanto = ImmutableMap.of(
                 "codigo", "codigo",
                 "restaurante.nome", "restaurante.nome",
-                "cliente.nome",  "cliente.nome",
+                "cliente.nome", "cliente.nome",
                 "valorTotal", "valorTotal"
         );
         return PageableTranslator.translate(apiPageable, mapeamanto);

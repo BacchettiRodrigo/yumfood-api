@@ -2,18 +2,20 @@ package br.com.reignited.yumfood.api.controller;
 
 import br.com.reignited.yumfood.api.assembler.PermissaoModelAssembler;
 import br.com.reignited.yumfood.api.model.PermissaoModel;
+import br.com.reignited.yumfood.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
 import br.com.reignited.yumfood.domain.service.PermissaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/grupos/{grupoId}/permissoes")
-public class GrupoPermissaoController {
+@RequestMapping(path = "/grupos/{grupoId}/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi {
 
     @Autowired
     private GrupoService grupoService;
