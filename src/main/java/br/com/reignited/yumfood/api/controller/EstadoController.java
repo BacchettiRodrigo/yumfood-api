@@ -1,18 +1,18 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.disassembler.EstadoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.EstadoModelAssembler;
+import br.com.reignited.yumfood.api.disassembler.EstadoInputDisassembler;
 import br.com.reignited.yumfood.api.model.EstadoModel;
 import br.com.reignited.yumfood.api.model.input.EstadoInput;
 import br.com.reignited.yumfood.api.openapi.controller.EstadoControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Estado;
 import br.com.reignited.yumfood.domain.service.EstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/estados")
@@ -28,7 +28,7 @@ public class EstadoController implements EstadoControllerOpenApi {
     private EstadoInputDisassembler estadoInputDisassembler;
 
     @GetMapping
-    public List<EstadoModel> listar() {
+    public CollectionModel<EstadoModel> listar() {
         return estadoModelAssembler.toCollectionModel(estadoService.listar());
     }
 

@@ -1,28 +1,29 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.assembler.RestauranteApenasNomeAssembler;
+import br.com.reignited.yumfood.api.assembler.RestauranteBasicoModelAssembler;
 import br.com.reignited.yumfood.api.disassembler.RestauranteInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.RestauranteModelAssembler;
+import br.com.reignited.yumfood.api.model.RestauranteApenasNome;
+import br.com.reignited.yumfood.api.model.RestauranteBasicoModel;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
 import br.com.reignited.yumfood.api.model.view.RestauranteView;
 import br.com.reignited.yumfood.api.openapi.controller.RestauranteControllerOpenApi;
-import br.com.reignited.yumfood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -39,18 +40,24 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     private RestauranteModelAssembler restauranteModelAssembler;
 
     @Autowired
+    private RestauranteBasicoModelAssembler restauranteBasicoModelAssembler;
+
+    @Autowired
+    private RestauranteApenasNomeAssembler restauranteApenasNomeAssembler;
+
+    @Autowired
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
-    @JsonView(RestauranteView.Resumo.class)
+    //@JsonView(RestauranteView.Resumo.class)
     @GetMapping
-    public List<RestauranteModel> listar() {
-        return restauranteModelAssembler.toCollectionModel(restauranteService.listar());
+    public CollectionModel<RestauranteBasicoModel> listar() {
+        return restauranteBasicoModelAssembler.toCollectionModel(restauranteService.listar());
     }
 
-    @JsonView(RestauranteView.ApenasNome.class)
+    //@JsonView(RestauranteView.ApenasNome.class)
     @GetMapping(params = "projecao=resumo")
-    public List<RestauranteModel> listarApenasNome() {
-        return listar();
+    public CollectionModel<RestauranteApenasNome> listarApenasNome() {
+        return restauranteApenasNomeAssembler.toCollectionModel(restauranteService.listar());
     }
 
     @GetMapping("/{restauranteId}")

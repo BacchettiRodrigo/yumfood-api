@@ -4,17 +4,15 @@ import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.EstadoModel;
 import br.com.reignited.yumfood.api.model.input.EstadoInput;
 import io.swagger.annotations.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.hateoas.CollectionModel;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = "Estados")
 public interface EstadoControllerOpenApi {
 
     @ApiOperation("Listar estados")
-    List<EstadoModel> listar();
+    CollectionModel<EstadoModel> listar();
 
     @ApiOperation("Buscar estado por ID")
     @ApiResponses({

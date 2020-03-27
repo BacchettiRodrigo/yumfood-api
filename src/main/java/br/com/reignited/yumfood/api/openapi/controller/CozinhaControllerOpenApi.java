@@ -7,12 +7,13 @@ import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 
 @Api(tags = "Cozinhas")
 public interface CozinhaControllerOpenApi {
 
     @ApiOperation("Lista as cozinhas")
-    Page<CozinhaModel> listar(@PageableDefault(size = 2) Pageable pageable);
+    PagedModel<CozinhaModel> listar(@PageableDefault(size = 2) Pageable pageable);
 
     @ApiOperation("Buscar uma cozinha por ID")
     @ApiResponses({

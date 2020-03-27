@@ -6,6 +6,7 @@ import br.com.reignited.yumfood.api.model.input.SenhaInput;
 import br.com.reignited.yumfood.api.model.input.UsuarioComSenhaInput;
 import br.com.reignited.yumfood.api.model.input.UsuarioInput;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public interface UsuarioControllerOpenApi {
 
     @ApiOperation("Listar usuários")
-    List<UsuarioModel> listar();
+    CollectionModel<UsuarioModel> listar();
 
     @ApiOperation("Busca um usuário por ID")
     @ApiResponses({

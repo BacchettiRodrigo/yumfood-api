@@ -1,4 +1,4 @@
-package br.com.reignited.yumfood.core.openapi;
+package br.com.reignited.yumfood.core.springfox;
 
 import br.com.reignited.yumfood.api.model.CozinhaModel;
 import br.com.reignited.yumfood.api.model.PedidoResumoModel;

@@ -1,8 +1,8 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.assembler.UsuarioModelAssembler;
 import br.com.reignited.yumfood.api.disassembler.UsuarioComSenhaDisassembler;
 import br.com.reignited.yumfood.api.disassembler.UsuarioInputDisassembler;
-import br.com.reignited.yumfood.api.assembler.UsuarioModelAssembler;
 import br.com.reignited.yumfood.api.model.UsuarioModel;
 import br.com.reignited.yumfood.api.model.input.SenhaInput;
 import br.com.reignited.yumfood.api.model.input.UsuarioComSenhaInput;
@@ -11,6 +11,7 @@ import br.com.reignited.yumfood.api.openapi.controller.UsuarioControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import br.com.reignited.yumfood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,9 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     private UsuarioComSenhaDisassembler usuarioComSenhaDisassembler;
 
     @GetMapping
-    public List<UsuarioModel> listar() {
-        return usuarioModelAssembler.toCollectionModel(usuarioService.listar());
+    public CollectionModel<UsuarioModel> listar() {
+        List<Usuario> usuarios = usuarioService.listar();
+        return usuarioModelAssembler.toCollectionModel(usuarios);
     }
 
     @GetMapping("/{usuarioId}")

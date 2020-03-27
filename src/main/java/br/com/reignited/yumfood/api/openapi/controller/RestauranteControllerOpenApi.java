@@ -1,10 +1,13 @@
 package br.com.reignited.yumfood.api.openapi.controller;
 
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
+import br.com.reignited.yumfood.api.model.RestauranteApenasNome;
+import br.com.reignited.yumfood.api.model.RestauranteBasicoModel;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
 import br.com.reignited.yumfood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -15,10 +18,10 @@ public interface RestauranteControllerOpenApi {
     @ApiImplicitParams({@ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
                     name = "projecao", paramType = "query", type = "string")})
     @ApiResponses({@ApiResponse(code = 400, message = "Parametros inválidos", response = Problem.class)})
-    List<RestauranteModel> listar();
+    CollectionModel<RestauranteBasicoModel> listar();
 
     @ApiOperation(value = "Lista restaurantes", hidden = true)
-    List<RestauranteModel> listarApenasNome();
+    CollectionModel<RestauranteApenasNome> listarApenasNome();
 
     @ApiOperation(value = "Buscar restaurante por ID")
     @ApiResponses({

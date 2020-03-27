@@ -4,14 +4,13 @@ import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.CidadeModel;
 import br.com.reignited.yumfood.api.model.input.CidadeInput;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Cidades")
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    List<CidadeModel> listar();
+    CollectionModel<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({

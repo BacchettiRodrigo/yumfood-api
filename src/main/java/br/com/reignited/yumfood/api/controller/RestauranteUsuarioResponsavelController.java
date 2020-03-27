@@ -6,10 +6,14 @@ import br.com.reignited.yumfood.api.openapi.controller.RestauranteUsuarioRespons
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/responsaveis")
@@ -22,9 +26,12 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     private UsuarioModelAssembler usuarioModelAssembler;
 
     @GetMapping
-    public List<UsuarioModel> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscar(restauranteId);
-        return usuarioModelAssembler.toCollectionModel(restaurante.getReponsaveis());
+        return usuarioModelAssembler.toCollectionModel(restaurante.getReponsaveis())
+                .removeLinks()
+                .add(linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+                        .listar(restauranteId)).withSelfRel());
     }
 
     @PutMapping("/{usuarioId}")

@@ -5,7 +5,6 @@ import br.com.reignited.yumfood.api.model.PermissaoModel;
 import br.com.reignited.yumfood.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
-import br.com.reignited.yumfood.domain.service.PermissaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

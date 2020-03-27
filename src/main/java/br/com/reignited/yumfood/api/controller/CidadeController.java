@@ -1,15 +1,17 @@
 package br.com.reignited.yumfood.api.controller;
 
-import br.com.reignited.yumfood.api.openapi.controller.CidadeControllerOpenApi;
-import br.com.reignited.yumfood.api.disassembler.CidadeInputDisassembler;
+import br.com.reignited.yumfood.api.ResourceUriHelper;
 import br.com.reignited.yumfood.api.assembler.CidadeModelAssembler;
+import br.com.reignited.yumfood.api.disassembler.CidadeInputDisassembler;
 import br.com.reignited.yumfood.api.model.CidadeModel;
 import br.com.reignited.yumfood.api.model.input.CidadeInput;
+import br.com.reignited.yumfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.reignited.yumfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.service.CidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +33,15 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDisassembler cidadeInputDisassembler;
 
     @GetMapping
-    public List<CidadeModel> listar() {
-        return cidadeModelAssembler.toCollectionModel(cidadeService.listar());
+    public CollectionModel<CidadeModel> listar() {
+        List<Cidade> cidades = cidadeService.listar();
+        return cidadeModelAssembler.toCollectionModel(cidades);
     }
 
     @GetMapping("/{cidadeId}")
     public CidadeModel buscar(@PathVariable Long cidadeId) {
-        return cidadeModelAssembler.toModel(cidadeService.buscar(cidadeId));
+        Cidade cidade = cidadeService.buscar(cidadeId);
+        return cidadeModelAssembler.toModel(cidade);
     }
 
     @PostMapping
@@ -45,7 +49,9 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeModel adicionar(@Valid @RequestBody CidadeInput cidadeInput) {
         try {
             Cidade cidade = cidadeInputDisassembler.toDomainModel(cidadeInput);
-            return cidadeModelAssembler.toModel(cidadeService.salvar(cidade));
+            CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidadeService.salvar(cidade));
+            ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
+            return cidadeModel;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

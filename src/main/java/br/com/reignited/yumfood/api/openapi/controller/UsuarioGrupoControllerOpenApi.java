@@ -2,12 +2,10 @@ package br.com.reignited.yumfood.api.openapi.controller;
 
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.GrupoModel;
-import br.com.reignited.yumfood.domain.model.Usuario;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

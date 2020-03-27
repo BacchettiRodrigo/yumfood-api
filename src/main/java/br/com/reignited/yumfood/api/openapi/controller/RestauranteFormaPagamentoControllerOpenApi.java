@@ -3,7 +3,6 @@ package br.com.reignited.yumfood.api.openapi.controller;
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
 import io.swagger.annotations.*;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

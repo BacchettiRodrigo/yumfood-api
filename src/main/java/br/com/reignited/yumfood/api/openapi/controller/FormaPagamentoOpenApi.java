@@ -3,19 +3,11 @@ package br.com.reignited.yumfood.api.openapi.controller;
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.model.input.FormaPagamentoInput;
-import br.com.reignited.yumfood.domain.model.FormaPagamento;
 import io.swagger.annotations.*;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-import javax.validation.Valid;
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Api(tags = "Formas de Pagamento")
 public interface FormaPagamentoOpenApi {

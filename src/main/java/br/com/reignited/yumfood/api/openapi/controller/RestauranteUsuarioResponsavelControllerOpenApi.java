@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.openapi.controller;
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.UsuarioModel;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
 
     @ApiOperation("Listar usuários responsáveis do restaurante")
     @ApiResponses({@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)})
-    List<UsuarioModel> listar(
+    CollectionModel<UsuarioModel> listar(
             @ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation("Associação de restaurante com usuário")

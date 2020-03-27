@@ -3,10 +3,11 @@ package br.com.reignited.yumfood.api.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter
-public class EnderecoModel {
+public class EnderecoModel extends RepresentationModel<EnderecoModel> {
 
     @ApiModelProperty(example = "12345-123")
     private String cep;
