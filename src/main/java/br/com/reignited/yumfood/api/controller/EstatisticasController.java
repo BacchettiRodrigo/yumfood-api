@@ -1,11 +1,13 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.YumLinks;
 import br.com.reignited.yumfood.api.openapi.controller.EstatisticasControllerOpenApi;
 import br.com.reignited.yumfood.domain.filter.VendaDiariaFilter;
 import br.com.reignited.yumfood.domain.model.dto.VendaDiaria;
 import br.com.reignited.yumfood.domain.service.VendaQueryService;
 import br.com.reignited.yumfood.domain.service.VendaReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +23,36 @@ import java.util.List;
 public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired
+    private YumLinks yumLinks;
+
+    @Autowired
     private VendaQueryService vendaQueryService;
 
     @Autowired
     private VendaReportService vendaReportService;
 
+    public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
+    }
+
+    @GetMapping
+    public EstatisticasModel estatisticas() {
+        var estatisticasModel = new EstatisticasModel();
+        estatisticasModel.add(yumLinks.linkToEstatisticasVendasDiarias("vendas-diarias"));
+
+        return estatisticasModel;
+    }
+
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro,
+    public List<VendaDiaria> consultarVendasDiarias(
+            VendaDiariaFilter filtro,
             @RequestParam(required = false, defaultValue = "+00:00") String timeOffSet) {
 
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffSet);
     }
 
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro,
+    public ResponseEntity<byte[]> consultarVendasDiariasPdf(
+            VendaDiariaFilter filtro,
             @RequestParam(required = false, defaultValue = "+00:00") String timeOffSet) {
 
         byte[] bytesPdf = vendaReportService.emitirVendasDiarias(filtro, timeOffSet);

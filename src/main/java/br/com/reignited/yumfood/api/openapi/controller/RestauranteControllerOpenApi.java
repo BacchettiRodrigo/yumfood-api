@@ -8,18 +8,20 @@ import br.com.reignited.yumfood.api.model.input.RestauranteInput;
 import br.com.reignited.yumfood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
 
-    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+    @ApiOperation(value = "Lista restaurantes")
     @ApiImplicitParams({@ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
                     name = "projecao", paramType = "query", type = "string")})
-    @ApiResponses({@ApiResponse(code = 400, message = "Parametros inválidos", response = Problem.class)})
     CollectionModel<RestauranteBasicoModel> listar();
 
+    @ApiIgnore
     @ApiOperation(value = "Lista restaurantes", hidden = true)
     CollectionModel<RestauranteApenasNome> listarApenasNome();
 
@@ -48,40 +50,40 @@ public interface RestauranteControllerOpenApi {
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void ativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+    ResponseEntity<Void> ativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation(value = "Inativar restaurante por ID")
     @ApiResponses({
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void inativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+    ResponseEntity<Void> inativar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation(value = "Abrir restaurante por ID")
     @ApiResponses({
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void abrir(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+    ResponseEntity<Void> abrir(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation(value = "Fechar restaurante por ID")
     @ApiResponses({
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void fechar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
+    ResponseEntity<Void> fechar(@ApiParam(value = "ID de um restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation(value = "Ativar multiplos restaurantes por ID")
     @ApiResponses({
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void ativarMultiplos(@ApiParam(name = "corpo", value = "Lista de IDs para ativação", required = true) List<Long> restauranteIds);
+    ResponseEntity<Void> ativarMultiplos(@ApiParam(name = "corpo", value = "Lista de IDs para ativação", required = true) List<Long> restauranteIds);
 
     @ApiOperation(value = "Inativar multiplos restaurantes por ID")
     @ApiResponses({
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void inativarMultiplos(@ApiParam(name = "corpo", value = "Lista de IDs para ativação", required = true) List<Long> restauranteIds);
+    ResponseEntity<Void> inativarMultiplos(@ApiParam(name = "corpo", value = "Lista de IDs para ativação", required = true) List<Long> restauranteIds);
 }

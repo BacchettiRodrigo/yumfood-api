@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 @Component
 public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoModel> {
 
@@ -35,10 +33,10 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
         pedidoModel.getEnderecoEntrega().getCidade()
                 .add(yumLinks.linkToCidade(pedidoModel.getEnderecoEntrega().getCidade().getId()));
         pedidoModel.getItens().forEach(item -> {
-            item.add(yumLinks.linkToProduto(pedidoModel.getRestaurante().getId(), item.getProdutoId()));
+            item.add(yumLinks.linkToRestauranteProduto(pedidoModel.getRestaurante().getId(), item.getProdutoId()));
         });
 
-        pedidoModel.add(yumLinks.linkToPedidos());
+        pedidoModel.add(yumLinks.linkToPedidos("pedidos"));
 
         if (source.podeSerConfirmado()) {
             pedidoModel.add(yumLinks.linkToConfirmacaoPedido(pedidoModel.getCodigo(), "confirmar"));

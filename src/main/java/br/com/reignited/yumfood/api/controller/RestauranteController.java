@@ -8,22 +8,20 @@ import br.com.reignited.yumfood.api.model.RestauranteApenasNome;
 import br.com.reignited.yumfood.api.model.RestauranteBasicoModel;
 import br.com.reignited.yumfood.api.model.RestauranteModel;
 import br.com.reignited.yumfood.api.model.input.RestauranteInput;
-import br.com.reignited.yumfood.api.model.view.RestauranteView;
 import br.com.reignited.yumfood.api.openapi.controller.RestauranteControllerOpenApi;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
-import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -98,33 +96,38 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
     @PutMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
         restauranteService.ativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{restauranteId}/inativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{restauranteId}/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrir(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
         restauranteService.abrir(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{restauranteId}/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
         restauranteService.fechar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/ativacoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+    public ResponseEntity<Void> ativarMultiplos(@RequestBody List<Long> restauranteIds) {
         try {
             restauranteService.ativar(restauranteIds);
+            return ResponseEntity.noContent().build();
         } catch (RestauranteNaoEncontradoException ex) {
             throw new NegocioException(ex.getMessage(), ex);
         }
@@ -132,9 +135,10 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
     @DeleteMapping("/inativacoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+    public ResponseEntity<Void> inativarMultiplos(@RequestBody List<Long> restauranteIds) {
         try {
             restauranteService.inativar(restauranteIds);
+            return ResponseEntity.noContent().build();
         } catch (RestauranteNaoEncontradoException ex) {
             throw new NegocioException(ex.getMessage(), ex);
         }

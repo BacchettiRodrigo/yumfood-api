@@ -8,6 +8,7 @@ import br.com.reignited.yumfood.api.openapi.controller.FormaPagamentoOpenApi;
 import br.com.reignited.yumfood.domain.model.FormaPagamento;
 import br.com.reignited.yumfood.domain.service.FormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
     private FormaPagamentoInputDisassembler disassembler;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
 
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 
@@ -52,7 +53,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
 
         List<FormaPagamento> formaPagamentos = formaPagamentoService.listar();
 
-        List<FormaPagamentoModel> pagamentoModelList = assembler.toCollectionModel(formaPagamentos);
+        CollectionModel<FormaPagamentoModel> pagamentoModelList = assembler.toCollectionModel(formaPagamentos);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())

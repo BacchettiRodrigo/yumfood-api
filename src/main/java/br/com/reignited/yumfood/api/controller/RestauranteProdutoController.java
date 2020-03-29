@@ -1,5 +1,6 @@
 package br.com.reignited.yumfood.api.controller;
 
+import br.com.reignited.yumfood.api.YumLinks;
 import br.com.reignited.yumfood.api.disassembler.ProdutoInputDisassembler;
 import br.com.reignited.yumfood.api.assembler.ProdutoModelAssembler;
 import br.com.reignited.yumfood.api.model.ProdutoModel;
@@ -10,6 +11,7 @@ import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.ProdutoService;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +34,13 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private ProdutoInputDisassembler produtoInputDisassembler;
 
+    @Autowired
+    private YumLinks yumLinks;
+
     @GetMapping
-    public List<ProdutoModel> listar(
+    public CollectionModel<ProdutoModel> listar(
             @PathVariable Long restauranteId,
-            @RequestParam(name = "incluir-inativos", required = false) boolean incluirInativos) {
+            @RequestParam(name = "incluir-inativos", defaultValue = "false", required = false) Boolean incluirInativos) {
 
         Restaurante restaurante = restauranteService.buscar(restauranteId);
         List<Produto> produtos;
@@ -46,7 +51,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
             produtos = produtoService.buscarAtivosPorRestaurante(restaurante);
         }
 
-        return produtoModelAssembler.toCollectionModel(produtos);
+        return produtoModelAssembler.toCollectionModel(produtos).add(yumLinks.linkToProdutos(restauranteId));
     }
 
     @GetMapping("/{produtoId}")

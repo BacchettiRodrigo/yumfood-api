@@ -31,8 +31,9 @@ public class FormaPagamentoModelAssembler extends RepresentationModelAssemblerSu
     @Override
     public FormaPagamentoModel toModel(FormaPagamento source) {
         FormaPagamentoModel model = createModelWithId(source.getId(), source);
+        mapper.map(source, model);
 
-        model.add(yumLinks.linkToFormaPagamento(model.getId()));
+        model.add(yumLinks.linkToFormasPagamento("formas-pagamento"));
 
         return model;
     }

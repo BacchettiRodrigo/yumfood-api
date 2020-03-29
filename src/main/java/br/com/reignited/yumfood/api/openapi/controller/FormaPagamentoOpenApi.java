@@ -3,7 +3,9 @@ package br.com.reignited.yumfood.api.openapi.controller;
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
 import br.com.reignited.yumfood.api.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.model.input.FormaPagamentoInput;
+import br.com.reignited.yumfood.api.openapi.model.FormasPagamentoModelOpenApi;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -12,8 +14,8 @@ import java.util.List;
 @Api(tags = "Formas de Pagamento")
 public interface FormaPagamentoOpenApi {
 
-    @ApiOperation("Listar formas de pagamento")
-    ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request);
+    @ApiOperation(value = "Listar formas de pagamento", response = FormasPagamentoModelOpenApi.class)
+    ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request);
 
     @ApiOperation("Buscar forma de pagamento por ID")
     @ApiResponses({

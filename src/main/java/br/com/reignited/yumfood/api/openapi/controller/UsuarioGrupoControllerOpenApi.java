@@ -6,28 +6,28 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = "Usuários")
 public interface UsuarioGrupoControllerOpenApi {
 
     @ApiOperation("Listar grupos do usuário")
     @ApiResponses({@ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)})
-    List<GrupoModel> listar(@PathVariable Long usuarioId);
+    CollectionModel<GrupoModel> listar(@PathVariable Long usuarioId);
 
     @ApiOperation("Associação de grupo com usuário")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Associação realizada com sucesso"),
             @ApiResponse(code = 404, message = "Usuário ou grupo não encontrado", response = Problem.class)
     })
-    void associarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId);
+    ResponseEntity<Void> associarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId);
 
     @ApiOperation("Desassociação de grupo com usuário")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Desassociação realizada com sucesso"),
             @ApiResponse(code = 404, message = "Usuário ou grupo não encontrado", response = Problem.class)
     })
-    void desassociarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId);
+    ResponseEntity<Void> desassociarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId);
 }

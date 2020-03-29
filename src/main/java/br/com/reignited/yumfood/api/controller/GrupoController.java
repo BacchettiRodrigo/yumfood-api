@@ -8,6 +8,7 @@ import br.com.reignited.yumfood.api.model.input.GrupoInput;
 import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     private GrupoInputDisassembler grupoInputDisassembler;
 
     @GetMapping
-    public List<GrupoModel> listar() {
+    public CollectionModel<GrupoModel> listar() {
         return grupoModelAssembler.toCollectionModel(grupoService.listar());
     }
 

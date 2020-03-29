@@ -2,14 +2,12 @@ package br.com.reignited.yumfood.api.assembler;
 
 import br.com.reignited.yumfood.api.YumLinks;
 import br.com.reignited.yumfood.api.controller.UsuarioController;
-import br.com.reignited.yumfood.api.controller.UsuarioGrupoController;
 import br.com.reignited.yumfood.api.model.UsuarioModel;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -33,7 +31,7 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
         mapper.map(source, usuarioModel);
 
         usuarioModel.add(yumLinks.linkToUsuarios("usuarios"));
-        usuarioModel.add(yumLinks.linkToGruposUsuario(usuarioModel.getId(), "grupos-usuario"));
+        usuarioModel.add(yumLinks.linkToUsuarioGrupos(usuarioModel.getId(), "grupos-usuario"));
 
         return usuarioModel;
     }
