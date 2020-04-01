@@ -1,7 +1,9 @@
 package br.com.reignited.yumfood.core.modelmapper;
 
-import br.com.reignited.yumfood.api.model.EnderecoModel;
-import br.com.reignited.yumfood.api.model.input.ItemPedidoInput;
+import br.com.reignited.yumfood.api.v1.model.EnderecoModel;
+import br.com.reignited.yumfood.api.v1.model.input.ItemPedidoInput;
+import br.com.reignited.yumfood.api.v2.model.input.CidadeInputV2;
+import br.com.reignited.yumfood.domain.model.Cidade;
 import br.com.reignited.yumfood.domain.model.Endereco;
 import br.com.reignited.yumfood.domain.model.ItemPedido;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,8 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         var modelMapper = new ModelMapper();
+
+        modelMapper.createTypeMap(CidadeInputV2.class, Cidade.class).addMappings(mapper -> mapper.skip(Cidade::setId));
 
 //        modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
 //                .addMapping(Restaurante::getTaxaFrete, RestauranteModel::setPrecoFrete);

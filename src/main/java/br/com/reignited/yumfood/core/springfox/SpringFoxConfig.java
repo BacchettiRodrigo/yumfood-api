@@ -1,14 +1,17 @@
 package br.com.reignited.yumfood.core.springfox;
 
-import br.com.reignited.yumfood.api.model.*;
-import br.com.reignited.yumfood.api.openapi.model.*;
+import br.com.reignited.yumfood.api.v1.model.*;
+import br.com.reignited.yumfood.api.v1.openapi.model.*;
 import br.com.reignited.yumfood.api.exceptionhandler.Problem;
+import br.com.reignited.yumfood.api.v2.model.CidadeModelV2;
+import br.com.reignited.yumfood.api.v2.model.CozinhaModelV2;
+import br.com.reignited.yumfood.api.v2.openapi.model.CidadesModelV2OpenApi;
+import br.com.reignited.yumfood.api.v2.openapi.model.CozinhasModelV2OpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Links;
@@ -44,17 +47,17 @@ import java.util.List;
 public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
-    public Docket apiDocket() {
+    public Docket apiDocketV1() {
 
         var typeResolver = new TypeResolver();
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("v1")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.reignited.yumfood.api"))
-                .paths(PathSelectors.any())
-//                .paths(PathSelectors.ant("/restaurantes/*"))
+                .paths(PathSelectors.ant("/v1/**"))
                 .build()
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfoV1())
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
@@ -63,6 +66,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(PagedModel.class, CozinhaModel.class), CozinhasModelOpenApi.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
@@ -83,20 +87,55 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(CollectionModel.class, RestauranteBasicoModel.class), RestaurantesBasicosModelOpenApi.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(CollectionModel.class, UsuarioModel.class), UsuariosModelOpenApi.class))
+
                 .ignoredParameterTypes(ServletWebRequest.class,
                         URL.class,
                         URI.class,
                         URLStreamHandler.class,
                         Resource.class,
                         File.class, InputStream.class)
-//                .globalOperationParameters(Arrays.asList(
-//                        new ParameterBuilder()
-//                                .name("campos")
-//                                .description("Nomes das propriedades pra filtrar a resposta, separados por vírgula")
-//                                .parameterType("query")
-//                                .modelRef(new ModelRef("string"))
-//                                .build()))
-                .tags(new Tag("Cidades", "Gerencia as cidades"));
+
+                .tags(new Tag("Cidades", "Gerencia as cidades"),
+                        new Tag("Grupos", "Gerencia os grupos de usuários"),
+                        new Tag("Cozinhas", "Gerencia as cozinhas"),
+                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+                        new Tag("Pedidos", "Gerencia os pedidos"),
+                        new Tag("Restaurantes", "Gerencia os restaurantes"),
+                        new Tag("Estados", "Gerencia os estados"),
+                        new Tag("Produtos", "Gerencia os produtos de restaurantes"),
+                        new Tag("Usuários", "Gerencia os usuários"),
+                        new Tag("Estatísticas", "Estatísticas da AlgaFood"),
+                        new Tag("Permissões", "Gerencia as permissões"));
+    }
+
+    @Bean
+    public Docket apiDocketV2() {
+
+        var typeResolver = new TypeResolver();
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("v2")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("br.com.reignited.yumfood.api"))
+                .paths(PathSelectors.ant("/v2/**"))
+                .build()
+                .apiInfo(apiInfoV2())
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, CidadeModelV2.class), CidadesModelV2OpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(PagedModel.class, CozinhaModelV2.class), CozinhasModelV2OpenApi.class))
+
+                .tags(new Tag("Cidades", "Gerencia as cidades"),
+                        new Tag("Cozinhas", "Gerencia as cozinhas"));
     }
 
     @Override
@@ -108,11 +147,20 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiInfoV1() {
         return new ApiInfoBuilder()
                 .title("Yumfood API")
                 .description("API aberta para clientes e restaurantes.")
                 .version("1")
+                .contact(new Contact("YumFood", "https://www.google.com.br/", "rodrigobacchetti@gmail.com"))
+                .build();
+    }
+
+    private ApiInfo apiInfoV2() {
+        return new ApiInfoBuilder()
+                .title("Yumfood API")
+                .description("API aberta para clientes e restaurantes.")
+                .version("2")
                 .contact(new Contact("YumFood", "https://www.google.com.br/", "rodrigobacchetti@gmail.com"))
                 .build();
     }
