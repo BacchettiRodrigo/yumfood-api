@@ -7,6 +7,9 @@ import br.com.reignited.yumfood.api.v1.model.input.CozinhaInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.CozinhaControllerOpenApi;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import br.com.reignited.yumfood.domain.service.CozinhaService;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/cozinhas")
 public class CozinhaController implements CozinhaControllerOpenApi {
@@ -36,8 +40,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
     @GetMapping
     public PagedModel<CozinhaModel> listar(@PageableDefault(size = 2) Pageable pageable) {
+        log.info("Consultando cozinhas com {} registros...", pageable.getPageSize());
         Page<Cozinha> cozinhaPage = cozinhaService.listar(pageable);
-
         return pagedResourcesAssembler.toModel(cozinhaPage, cozinhaModelAssembler);
     }
 
