@@ -17,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,18 +39,20 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
+    @PreAuthorize(value = "isAuthenticated()")
     @GetMapping
     public PagedModel<CozinhaModel> listar(@PageableDefault(size = 2) Pageable pageable) {
-        //log.info("Consultando cozinhas com {} registros...", pageable.getPageSize());
         Page<Cozinha> cozinhaPage = cozinhaService.listar(pageable);
         return pagedResourcesAssembler.toModel(cozinhaPage, cozinhaModelAssembler);
     }
 
+    @PreAuthorize(value = "isAuthenticated()")
     @GetMapping("/{cozinhaId}")
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
         return cozinhaModelAssembler.toModel(cozinhaService.buscar(cozinhaId));
     }
 
+    @PreAuthorize(value = "hasAuthority('EDITAR_COZINHAS')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@Valid @RequestBody CozinhaInput cozinhaInput) {
@@ -57,6 +60,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaModelAssembler.toModel(cozinhaService.salvar(cozinha));
     }
 
+    @PreAuthorize(value = "hasAuthority('EDITAR_COZINHAS')")
     @PutMapping("/{cozinhaId}")
     public CozinhaModel atualizar(@PathVariable Long cozinhaId, @Valid @RequestBody CozinhaInput cozinha) {
         Cozinha cozinhaAtual = cozinhaService.buscar(cozinhaId);
@@ -68,6 +72,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaModelAssembler.toModel(cozinhaService.salvar(cozinhaAtual));
     }
 
+    @PreAuthorize(value = "hasAuthority('EDITAR_COZINHAS')")
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cozinhaId) {

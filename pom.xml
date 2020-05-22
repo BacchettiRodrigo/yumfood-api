@@ -22,6 +22,7 @@
         <aws-java-sdk-s3>1.11.721</aws-java-sdk-s3>
         <spring-fox.version>2.9.2</spring-fox.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
+        <oauth2-oidc-sdk.version>6.21.2</oauth2-oidc-sdk.version>
     </properties>
 
     <dependencies>
@@ -119,6 +120,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${spring-fox.version}</version>
@@ -149,6 +154,11 @@
             <groupId>org.logback-extensions</groupId>
             <artifactId>logback-ext-loggly</artifactId>
             <version>${logback-ext-loggly.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${oauth2-oidc-sdk.version}</version>
         </dependency>
     </dependencies>
 

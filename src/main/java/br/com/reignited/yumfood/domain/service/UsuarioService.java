@@ -9,6 +9,7 @@ import br.com.reignited.yumfood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ public class UsuarioService {
 
     @Autowired
     private GrupoService grupoService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
@@ -45,6 +49,11 @@ public class UsuarioService {
             throw new NegocioException(
                     String.format("Já existe um usuário cadastrado com o email %s", usuario.getEmail()));
         }
+
+        if (usuario.isNovo()) {
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        }
+
         return usuarioRepository.save(usuario);
     }
 
@@ -52,11 +61,11 @@ public class UsuarioService {
     public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha) {
         Usuario usuario = buscar(usuarioId);
 
-        if (usuario.senhaNaoCoincideCom(senhaAtual)) {
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
             throw new NegocioException("A senha atual não coincide com a senha do usuário.");
         }
 
-        usuario.setSenha(novaSenha);
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
     }
 
     @Transactional

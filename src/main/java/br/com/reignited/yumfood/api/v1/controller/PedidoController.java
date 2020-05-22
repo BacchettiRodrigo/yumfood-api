@@ -9,6 +9,7 @@ import br.com.reignited.yumfood.api.v1.model.input.PedidoInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import br.com.reignited.yumfood.core.data.PageWrapper;
 import br.com.reignited.yumfood.core.data.PageableTranslator;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
 import br.com.reignited.yumfood.domain.model.Pedido;
@@ -52,6 +53,9 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     @GetMapping
     public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 1) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
@@ -74,10 +78,8 @@ public class PedidoController implements PedidoControllerOpenApi {
         try {
             Pedido pedido = pedidoInputDisassembler.toDomainModel(input);
 
-            //TODO: Capturar o usuário autenticado
             Usuario usuario = new Usuario();
-            usuario.setId(1L);
-
+            usuario.setId(yumSecurity.getUsuarioId());
             pedido.setCliente(usuario);
 
             pedidoService.emitirPedido(pedido);
