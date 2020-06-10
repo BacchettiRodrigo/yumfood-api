@@ -4,6 +4,7 @@ import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private YumLinks yumLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscar(restauranteId);
@@ -41,6 +43,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return formasPagamentoModel;
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
@@ -48,6 +51,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PutMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

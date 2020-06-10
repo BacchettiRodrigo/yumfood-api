@@ -6,6 +6,7 @@ import br.com.reignited.yumfood.api.v1.assembler.ProdutoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.ProdutoModel;
 import br.com.reignited.yumfood.api.v1.model.input.ProdutoInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.RestauranteProdutoControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.model.Produto;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.ProdutoService;
@@ -37,6 +38,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private YumLinks yumLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<ProdutoModel> listar(
             @PathVariable Long restauranteId,
@@ -54,12 +56,14 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         return produtoModelAssembler.toCollectionModel(produtos).add(yumLinks.linkToProdutos(restauranteId));
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping("/{produtoId}")
     public ProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         Produto produto = produtoService.buscar(restauranteId, produtoId);
         return produtoModelAssembler.toModel(produto);
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProdutoModel adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
@@ -72,6 +76,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         return produtoModelAssembler.toModel(produto);
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PutMapping("/{produtoId}")
     public ProdutoModel atualizar(
             @PathVariable Long restauranteId,
