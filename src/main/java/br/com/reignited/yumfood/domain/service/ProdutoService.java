@@ -1,6 +1,7 @@
 package br.com.reignited.yumfood.domain.service;
 
 import br.com.reignited.yumfood.domain.exception.ProdutoNaoEncontradoException;
+import br.com.reignited.yumfood.domain.model.FotoProduto;
 import br.com.reignited.yumfood.domain.model.Produto;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.repository.ProdutoRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -25,8 +27,12 @@ public class ProdutoService {
         return produtoRepository.findByRestaurante(restaurante);
     }
 
+    public List<Produto> buscarAtivosPorRestaurante(Restaurante restaurante) {
+        return produtoRepository.findAtivosByRestaurante(restaurante);
+    }
+
     @Transactional
-    public Produto salvar (Produto produto) {
+    public Produto salvar(Produto produto) {
         return produtoRepository.save(produto);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +30,14 @@ public class FormaPagamentoService {
     public FormaPagamento buscar(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new FormaPagamentoNaoEncontradaException(id));
+    }
+
+    public OffsetDateTime dataUltimaAtualizacao() {
+        return repository.getDataUltimaAtualizacao();
+    }
+
+    public OffsetDateTime dataUltimaAtualizacaoById(Long formaPagamentoId) {
+        return repository.getDataAtualizacaoById(formaPagamentoId);
     }
 
     @Transactional

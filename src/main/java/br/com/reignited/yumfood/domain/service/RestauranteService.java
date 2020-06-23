@@ -101,7 +101,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void removerFormaPagameto(Long restauranteId, Long formaPagamentoId) {
+    public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante restaurante = buscar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscar(formaPagamentoId);
 
@@ -109,7 +109,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void adicionarFormaPagameto(Long restauranteId, Long formaPagamentoId) {
+    public void adicionarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante restaurante = buscar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscar(formaPagamentoId);
 

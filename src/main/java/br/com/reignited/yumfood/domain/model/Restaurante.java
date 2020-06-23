@@ -43,7 +43,7 @@ public class Restaurante {
     @JoinTable(name = "restaurante_usuario_responsavel",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id"))
-    private Set<Usuario> reponsaveis = new HashSet<>();
+    private Set<Usuario> responsaveis = new HashSet<>();
 
     @Embedded
     private Endereco endereco;
@@ -90,14 +90,46 @@ public class Restaurante {
     }
 
     public boolean adicionarResponsavel (Usuario usuario) {
-        return getReponsaveis().add(usuario);
+        return getResponsaveis().add(usuario);
     }
 
     public boolean removerResponsavel (Usuario usuario) {
-        return getReponsaveis().remove(usuario);
+        return getResponsaveis().remove(usuario);
     }
 
     public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
         return getFormasPagamento().contains(formaPagamento);
+    }
+
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public boolean isFechado() {
+        return !isAberto();
+    }
+
+    public boolean isInativo() {
+        return !isAtivo();
+    }
+
+    public boolean isAtivo() {
+        return this.ativo;
+    }
+
+    public boolean aberturaPermitida() {
+        return isAtivo() && isFechado();
+    }
+
+    public boolean ativacaoPermitida() {
+        return isInativo();
+    }
+
+    public boolean inativacaoPermitida() {
+        return isAtivo();
+    }
+
+    public boolean fechamentoPermitido() {
+        return isAberto();
     }
 }
