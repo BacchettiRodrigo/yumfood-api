@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.CidadeController;
 import br.com.reignited.yumfood.api.v1.model.CidadeModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public CidadeModelAssembler() {
         super(CidadeController.class, CidadeModel.class);
     }
@@ -30,15 +34,25 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
         CidadeModel cidadeModel = createModelWithId(source.getId(), source);
         mapper.map(source, cidadeModel);
 
-        cidadeModel.add(yumLinks.linkToCidades("cidades"));
-        cidadeModel.getEstado().add(yumLinks.linkToEstado(cidadeModel.getEstado().getId()));
+        if (yumSecurity.podeConsultarCidades()) {
+            cidadeModel.add(yumLinks.linkToCidades("cidades"));
+        }
+        if (yumSecurity.podeConsultarEstados()) {
+            cidadeModel.getEstado().add(yumLinks.linkToEstado(cidadeModel.getEstado().getId()));
+        }
 
         return cidadeModel;
     }
 
     @Override
     public CollectionModel<CidadeModel> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities)
-                .add(linkTo(CidadeController.class).withSelfRel());
+        CollectionModel<CidadeModel> collectionModel = super.toCollectionModel(entities);
+
+        if (yumSecurity.podeConsultarCidades()) {
+            collectionModel.add(linkTo(CidadeController.class).withSelfRel());
+        }
+
+        return collectionModel;
+
     }
 }

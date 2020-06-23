@@ -5,6 +5,7 @@ import br.com.reignited.yumfood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.v1.model.input.FormaPagamentoInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.FormaPagamentoOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.model.FormaPagamento;
 import br.com.reignited.yumfood.domain.service.FormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
     @Autowired
     private FormaPagamentoInputDisassembler disassembler;
 
+    @CheckSecurity.FormaPagamento.PodeConsultar
     @GetMapping
     public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
 
@@ -61,6 +63,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
                 .body(pagamentoModelList);
     }
 
+    @CheckSecurity.FormaPagamento.PodeConsultar
     @GetMapping("/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -87,6 +90,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
                 .body(formaPagamentoModel);
     }
 
+    @CheckSecurity.FormaPagamento.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@Valid @RequestBody FormaPagamentoInput input) {
@@ -94,6 +98,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
         return assembler.toModel(formaPagamentoService.salvar(formaPagamento));
     }
 
+    @CheckSecurity.FormaPagamento.PodeEditar
     @PutMapping("{formaPagamentoId}")
     public FormaPagamentoModel atualizar
             (@PathVariable Long formaPagamentoId, @Valid @RequestBody FormaPagamentoInput input) {
@@ -105,6 +110,7 @@ public class FormaPagamentoController implements FormaPagamentoOpenApi {
         return assembler.toModel(formaPagamentoService.salvar(formaPagamento));
     }
 
+    @CheckSecurity.FormaPagamento.PodeEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long formaPagamentoId) {

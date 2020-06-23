@@ -5,6 +5,7 @@ import br.com.reignited.yumfood.api.v1.disassembler.GrupoInputDisassembler;
 import br.com.reignited.yumfood.api.v1.assembler.GrupoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.GrupoModel;
 import br.com.reignited.yumfood.api.v1.model.input.GrupoInput;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.model.Grupo;
 import br.com.reignited.yumfood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,20 @@ public class GrupoController implements GrupoControllerOpenApi {
     @Autowired
     private GrupoInputDisassembler grupoInputDisassembler;
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<GrupoModel> listar() {
         return grupoModelAssembler.toCollectionModel(grupoService.listar());
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeConsultar
     @GetMapping("/{grupoId}")
     public GrupoModel buscar(@PathVariable Long grupoId) {
         Grupo grupo = grupoService.buscar(grupoId);
         return grupoModelAssembler.toModel(grupo);
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel adicionar(@Valid @RequestBody GrupoInput grupoInput) {
@@ -46,6 +50,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toModel(grupoService.salvar(grupo));
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @PutMapping("/{grupoId}")
     public GrupoModel atualizar(@PathVariable Long grupoId, @Valid @RequestBody GrupoInput grupoInput) {
         Grupo grupoAtual = grupoService.buscar(grupoId);
@@ -56,6 +61,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toModel(grupoService.salvar(grupoAtual));
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @DeleteMapping("{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long grupoId) {

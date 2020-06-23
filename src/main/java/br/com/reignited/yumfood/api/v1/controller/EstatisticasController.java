@@ -2,6 +2,7 @@ package br.com.reignited.yumfood.api.v1.controller;
 
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.openapi.controller.EstatisticasControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.filter.VendaDiariaFilter;
 import br.com.reignited.yumfood.domain.model.dto.VendaDiaria;
 import br.com.reignited.yumfood.domain.service.VendaQueryService;
@@ -34,6 +35,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
     public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping
     public EstatisticasModel estatisticas() {
         var estatisticasModel = new EstatisticasModel();
@@ -42,6 +44,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
         return estatisticasModel;
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiaria> consultarVendasDiarias(
             VendaDiariaFilter filtro,
@@ -50,6 +53,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffSet);
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> consultarVendasDiariasPdf(
             VendaDiariaFilter filtro,

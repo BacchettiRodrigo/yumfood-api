@@ -43,7 +43,7 @@ public class Restaurante {
     @JoinTable(name = "restaurante_usuario_responsavel",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id"))
-    private Set<Usuario> reponsaveis = new HashSet<>();
+    private Set<Usuario> responsaveis = new HashSet<>();
 
     @Embedded
     private Endereco endereco;
@@ -90,11 +90,11 @@ public class Restaurante {
     }
 
     public boolean adicionarResponsavel (Usuario usuario) {
-        return getReponsaveis().add(usuario);
+        return getResponsaveis().add(usuario);
     }
 
     public boolean removerResponsavel (Usuario usuario) {
-        return getReponsaveis().remove(usuario);
+        return getResponsaveis().remove(usuario);
     }
 
     public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {

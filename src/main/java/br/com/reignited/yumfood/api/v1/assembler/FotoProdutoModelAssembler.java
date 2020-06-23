@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.RestauranteProdutoFotoController;
 import br.com.reignited.yumfood.api.v1.model.FotoProdutoModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.FotoProduto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class FotoProdutoModelAssembler extends RepresentationModelAssemblerSuppo
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public FotoProdutoModelAssembler() {
         super(RestauranteProdutoFotoController.class, FotoProdutoModel.class);
     }
@@ -27,8 +31,10 @@ public class FotoProdutoModelAssembler extends RepresentationModelAssemblerSuppo
         FotoProdutoModel model = createModelWithId(source.getId(), source, source.getRestauranteId());
         mapper.map(source, model);
 
-        model.add(yumLinks.linkToRestauranteProduto(
-                source.getRestauranteId(), source.getProduto().getId(), "produto"));
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            model.add(yumLinks.linkToRestauranteProduto(
+                    source.getRestauranteId(), source.getProduto().getId(), "produto"));
+        }
 
         return model;
     }

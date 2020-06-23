@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.RestauranteController;
 import br.com.reignited.yumfood.api.v1.model.RestauranteApenasNome;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class RestauranteApenasNomeAssembler extends RepresentationModelAssembler
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public RestauranteApenasNomeAssembler() {
         super(RestauranteController.class, RestauranteApenasNome.class);
     }
@@ -28,13 +32,21 @@ public class RestauranteApenasNomeAssembler extends RepresentationModelAssembler
         RestauranteApenasNome model = createModelWithId(source.getId(), source);
         mapper.map(source, model);
 
-        model.add(yumLinks.linkToRestaurantes("restaurantes"));
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            model.add(yumLinks.linkToRestaurantes("restaurantes"));
+        }
 
         return model;
     }
 
     @Override
     public CollectionModel<RestauranteApenasNome> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities).add(yumLinks.linkToRestaurantes());
+        CollectionModel<RestauranteApenasNome> collection = super.toCollectionModel(entities);
+
+        if(yumSecurity.podeConsultarRestaurantes()) {
+            collection.add(yumLinks.linkToRestaurantes());
+        }
+
+        return collection;
     }
 }

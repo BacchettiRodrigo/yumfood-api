@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.UsuarioController;
 import br.com.reignited.yumfood.api.v1.model.UsuarioModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public UsuarioModelAssembler() {
         super(UsuarioController.class, UsuarioModel.class);
     }
@@ -30,8 +34,10 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
         UsuarioModel usuarioModel = createModelWithId(source.getId(), source);
         mapper.map(source, usuarioModel);
 
-        usuarioModel.add(yumLinks.linkToUsuarios("usuarios"));
-        usuarioModel.add(yumLinks.linkToUsuarioGrupos(usuarioModel.getId(), "grupos-usuario"));
+        if (yumSecurity.podeEditarUsuariosGruposPermissoes()) {
+            usuarioModel.add(yumLinks.linkToUsuarios("usuarios"));
+            usuarioModel.add(yumLinks.linkToUsuarioGrupos(usuarioModel.getId(), "grupos-usuario"));
+        }
 
         return usuarioModel;
     }

@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.CozinhaController;
 import br.com.reignited.yumfood.api.v1.model.CozinhaModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Cozinha;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class CozinhaModelAssembler extends RepresentationModelAssemblerSupport<C
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public CozinhaModelAssembler() {
         super(CozinhaController.class, CozinhaModel.class);
     }
@@ -27,7 +31,9 @@ public class CozinhaModelAssembler extends RepresentationModelAssemblerSupport<C
         CozinhaModel cozinhaModel = createModelWithId(source.getId(), source);
         mapper.map(source, cozinhaModel);
 
-        cozinhaModel.add(yumLinks.linkToCozinhas("cidades"));
+        if (yumSecurity.podeConsultarCozinhas()) {
+            cozinhaModel.add(yumLinks.linkToCozinhas("cidades"));
+        }
 
         return cozinhaModel;
     }

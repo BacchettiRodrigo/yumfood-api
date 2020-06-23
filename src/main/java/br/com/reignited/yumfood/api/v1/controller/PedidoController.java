@@ -9,6 +9,7 @@ import br.com.reignited.yumfood.api.v1.model.input.PedidoInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import br.com.reignited.yumfood.core.data.PageWrapper;
 import br.com.reignited.yumfood.core.data.PageableTranslator;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
@@ -56,6 +57,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private YumSecurity yumSecurity;
 
+    @CheckSecurity.Pedidos.PodePesquisar
     @GetMapping
     public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 1) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
@@ -67,11 +69,13 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pagedResourcesAssembler.toModel(pedidos, pedidoResumoModelAssembler);
     }
 
+    @CheckSecurity.Pedidos.PodeBuscar
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         return pedidoModelAssembler.toModel(pedidoService.buscar(codigoPedido));
     }
 
+    @CheckSecurity.Pedidos.PodeEmitirPedido
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoModel emissaoPedido(@Valid @RequestBody PedidoInput input) {
@@ -91,6 +95,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         }
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedido
     @PutMapping("/{codigoPedido}/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> confirmar(@PathVariable String codigoPedido) {
@@ -98,6 +103,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedido
     @PutMapping("/{codigoPedido}/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> entregar(@PathVariable String codigoPedido) {
@@ -105,6 +111,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedido
     @PutMapping("/{codigoPedido}/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> cancelar(@PathVariable String codigoPedido) {

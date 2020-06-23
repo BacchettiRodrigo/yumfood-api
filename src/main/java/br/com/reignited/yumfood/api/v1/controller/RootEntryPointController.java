@@ -1,6 +1,7 @@
 package br.com.reignited.yumfood.api.v1.controller;
 
 import br.com.reignited.yumfood.api.v1.YumLinks;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.MediaType;
@@ -15,6 +16,9 @@ public class RootEntryPointController {
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     private static class RootEntryPointModel extends RepresentationModel<RootEntryPointModel> {
 
     }
@@ -23,16 +27,32 @@ public class RootEntryPointController {
     public RootEntryPointModel root() {
         var rootEntryPointModel = new RootEntryPointModel();
 
-        rootEntryPointModel.add(yumLinks.linkToCozinhas("cozinhas"));
-        rootEntryPointModel.add(yumLinks.linkToPedidos("pedidos"));
-        rootEntryPointModel.add(yumLinks.linkToRestaurantes("restaurantes"));
-        rootEntryPointModel.add(yumLinks.linkToGrupos("grupos"));
-        rootEntryPointModel.add(yumLinks.linkToUsuarios("usuarios"));
-        rootEntryPointModel.add(yumLinks.linkToPermissoes("permissoes"));
-        rootEntryPointModel.add(yumLinks.linkToFormasPagamento("formas-pagamento"));
-        rootEntryPointModel.add(yumLinks.linkToEstados("estados"));
-        rootEntryPointModel.add(yumLinks.linkToCidades("cidades"));
-        rootEntryPointModel.add(yumLinks.linkToEstatisticas("estatisticas"));
+        if (yumSecurity.podeConsultarCozinhas()) {
+            rootEntryPointModel.add(yumLinks.linkToCozinhas("cozinhas"));
+        }
+        if (yumSecurity.podePesquisarPedidos()) {
+            rootEntryPointModel.add(yumLinks.linkToPedidos("pedidos"));
+        }
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            rootEntryPointModel.add(yumLinks.linkToRestaurantes("restaurantes"));
+        }
+        if (yumSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            rootEntryPointModel.add(yumLinks.linkToGrupos("grupos"));
+            rootEntryPointModel.add(yumLinks.linkToUsuarios("usuarios"));
+            rootEntryPointModel.add(yumLinks.linkToPermissoes("permissoes"));
+        }
+        if (yumSecurity.podeConsultarFormasPagamento()) {
+            rootEntryPointModel.add(yumLinks.linkToFormasPagamento("formas-pagamento"));
+        }
+        if (yumSecurity.podeConsultarEstados()) {
+            rootEntryPointModel.add(yumLinks.linkToEstados("estados"));
+        }
+        if (yumSecurity.podeConsultarCidades()) {
+            rootEntryPointModel.add(yumLinks.linkToCidades("cidades"));
+        }
+        if (yumSecurity.podeConsultarEstatisticas()) {
+            rootEntryPointModel.add(yumLinks.linkToEstatisticas("estatisticas"));
+        }
 
         return rootEntryPointModel;
     }

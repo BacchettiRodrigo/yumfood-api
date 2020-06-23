@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.EstadoController;
 import br.com.reignited.yumfood.api.v1.model.EstadoModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class EstadoModelAssembler extends RepresentationModelAssemblerSupport<Es
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public EstadoModelAssembler() {
         super(EstadoController.class, EstadoModel.class);
     }
@@ -30,14 +34,21 @@ public class EstadoModelAssembler extends RepresentationModelAssemblerSupport<Es
         EstadoModel estadoModel = createModelWithId(source.getId(), source);
         mapper.map(source, estadoModel);
 
-        estadoModel.add(yumLinks.linkToEstados("estados"));
+        if (yumSecurity.podeConsultarEstados()) {
+            estadoModel.add(yumLinks.linkToEstados("estados"));
+        }
 
         return estadoModel;
     }
 
     @Override
     public CollectionModel<EstadoModel> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities)
-                .add(linkTo(EstadoController.class).withSelfRel());
+        CollectionModel<EstadoModel> collectionModel = super.toCollectionModel(entities);
+
+        if (yumSecurity.podeConsultarEstados()) {
+            collectionModel.add(yumLinks.linkToEstados("estados"));
+        }
+
+        return collectionModel;
     }
 }

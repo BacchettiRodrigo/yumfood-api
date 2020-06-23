@@ -5,6 +5,7 @@ import br.com.reignited.yumfood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.FormaPagamentoModel;
 import br.com.reignited.yumfood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import br.com.reignited.yumfood.core.security.CheckSecurity;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +27,29 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscar(restauranteId);
         CollectionModel<FormaPagamentoModel> formasPagamentoModel =
-                formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
-                        .removeLinks()
-                        .add(yumLinks.linkToRestauranteFormasPagamento(restauranteId, "formas-pagamento"))
-                        .add(yumLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+                formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento()).removeLinks();
 
-        formasPagamentoModel.getContent().forEach(forma -> {
-            forma.add(yumLinks.linkToRestauranteFormaPagamentoDesassociacao(restauranteId, forma.getId(), "desassociar"));
-        });
+        formasPagamentoModel.add(yumLinks.linkToRestauranteFormasPagamento(restauranteId, "formas-pagamento"));
+
+        if (yumSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+            formasPagamentoModel.add(yumLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+            formasPagamentoModel.getContent().forEach(forma -> {
+                forma.add(yumLinks.linkToRestauranteFormaPagamentoDesassociacao(restauranteId, forma.getId(), "desassociar"));
+            });
+        }
 
         return formasPagamentoModel;
     }
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
@@ -51,7 +57,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return ResponseEntity.noContent().build();
     }
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @PutMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

@@ -6,6 +6,7 @@ import br.com.reignited.yumfood.api.v1.disassembler.CidadeInputDisassembler;
 import br.com.reignited.yumfood.api.v1.model.CidadeModel;
 import br.com.reignited.yumfood.api.v1.model.input.CidadeInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.core.web.YumMediaTypes;
 import br.com.reignited.yumfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.reignited.yumfood.domain.exception.NegocioException;
@@ -33,18 +34,21 @@ public class CidadeController implements CidadeControllerOpenApi {
     @Autowired
     private CidadeInputDisassembler cidadeInputDisassembler;
 
+    @CheckSecurity.Cidade.PodeConsultar
     @GetMapping
     public CollectionModel<CidadeModel> listar() {
         List<Cidade> cidades = cidadeService.listar();
         return cidadeModelAssembler.toCollectionModel(cidades);
     }
 
+    @CheckSecurity.Cidade.PodeConsultar
     @GetMapping("/{cidadeId}")
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cidadeService.buscar(cidadeId);
         return cidadeModelAssembler.toModel(cidade);
     }
 
+    @CheckSecurity.Cidade.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@Valid @RequestBody CidadeInput cidadeInput) {
@@ -58,6 +62,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
+    @CheckSecurity.Cidade.PodeEditar
     @PutMapping("/{cidadeId}")
     public CidadeModel atualizar(@PathVariable Long cidadeId, @Valid @RequestBody CidadeInput cidade) {
         try {
@@ -72,6 +77,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
+    @CheckSecurity.Cidade.PodeEditar
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {

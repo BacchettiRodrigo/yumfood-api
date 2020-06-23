@@ -4,6 +4,8 @@ import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.assembler.GrupoModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.GrupoModel;
 import br.com.reignited.yumfood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import br.com.reignited.yumfood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +28,28 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
+    @CheckSecurity.UsuarioGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<GrupoModel> listar(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscar(usuarioId);
-        CollectionModel<GrupoModel> grupoModels = grupoModelAssembler.toCollectionModel(usuario.getGrupos());
+        CollectionModel<GrupoModel> grupoModels = grupoModelAssembler
+                .toCollectionModel(usuario.getGrupos()).removeLinks();
 
-        grupoModels.getContent().forEach(grupoModel -> {
-            grupoModel.add(yumLinks.linkToUsuarioGrupoDesassociar(usuarioId, grupoModel.getId(), "desassociar"));
-        });
+        if (yumSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            grupoModels.getContent().forEach(grupoModel -> {
+                grupoModel.add(yumLinks.linkToUsuarioGrupoDesassociar(usuarioId, grupoModel.getId(), "desassociar"));
+            });
 
-        return grupoModels
-                .removeLinks()
-                .add(yumLinks.linkToUsuarioGrupos(usuarioId))
-                .add(yumLinks.linkToUsuarioGrupoAssociar(usuarioId, null, "associar"));
+            grupoModels.add(yumLinks.linkToUsuarioGrupoAssociar(usuarioId, null, "associar"));
+        }
+
+        return grupoModels;
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
@@ -48,6 +57,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociarGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId) {

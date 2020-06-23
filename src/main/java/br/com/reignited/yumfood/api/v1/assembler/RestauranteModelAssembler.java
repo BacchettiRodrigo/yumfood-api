@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.RestauranteController;
 import br.com.reignited.yumfood.api.v1.model.RestauranteModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class RestauranteModelAssembler extends RepresentationModelAssemblerSuppo
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public RestauranteModelAssembler() {
         super(RestauranteController.class, RestauranteModel.class);
     }
@@ -28,30 +32,42 @@ public class RestauranteModelAssembler extends RepresentationModelAssemblerSuppo
         RestauranteModel model = createModelWithId(source.getId(), source);
         mapper.map(source, model);
 
-        model.getCozinha().add(yumLinks.linkToCozinha(model.getCozinha().getId()));
-        model.add(yumLinks.linkToRestaurantes("restaurantes"));
-        model.add(yumLinks.linkToRestauranteFormasPagamento(model.getId(), "formas-pagamento"));
-        model.add(yumLinks.linkToRestauranteResponsavel(model.getId(), "responsaveis"));
-        model.add(yumLinks.linkToProdutos(model.getId(), "produtos"));
-
-        if (model.getEndereco() != null && model.getEndereco().getCidade() != null) {
-            model.getEndereco().getCidade().add(yumLinks.linkToCidade(model.getEndereco().getCidade().getId()));
+        if (yumSecurity.podeConsultarCozinhas()) {
+            model.getCozinha().add(yumLinks.linkToCozinha(model.getCozinha().getId()));
+            model.add(yumLinks.linkToProdutos(model.getId(), "produtos"));
+            model.add(yumLinks.linkToRestauranteFormasPagamento(model.getId(), "formas-pagamento"));
         }
 
-        if (source.ativacaoPermitida()) {
-            model.add(yumLinks.linkToAtivarRestaurante(source.getId(), "ativar"));
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            model.add(yumLinks.linkToRestaurantes("restaurantes"));
         }
 
-        if (source.inativacaoPermitida()) {
-            model.add(yumLinks.linkToInativarRestaurante(source.getId(), "inativar"));
+        if (yumSecurity.podeGerenciarCadastroRestaurantes()) {
+            if (source.ativacaoPermitida()) {
+                model.add(yumLinks.linkToAtivarRestaurante(source.getId(), "ativar"));
+            }
+
+            if (source.inativacaoPermitida()) {
+                model.add(yumLinks.linkToInativarRestaurante(source.getId(), "inativar"));
+            }
+
+            model.add(yumLinks.linkToRestauranteResponsavel(model.getId(), "responsaveis"));
         }
 
-        if (source.aberturaPermitida()) {
-            model.add(yumLinks.linkToAbrirRestaurante(source.getId(), "abrir"));
+        if (yumSecurity.podeGerenciarFuncionamentoRestaurantes(model.getId())) {
+            if (source.aberturaPermitida()) {
+                model.add(yumLinks.linkToAbrirRestaurante(source.getId(), "abrir"));
+            }
+
+            if (source.fechamentoPermitido()) {
+                model.add(yumLinks.linkToFecharRestaurante(source.getId(), "fechar"));
+            }
         }
 
-        if (source.fechamentoPermitido()) {
-            model.add(yumLinks.linkToFecharRestaurante(source.getId(), "fechar"));
+        if (yumSecurity.podeConsultarCidades()) {
+            if (model.getEndereco() != null && model.getEndereco().getCidade() != null) {
+                model.getEndereco().getCidade().add(yumLinks.linkToCidade(model.getEndereco().getCidade().getId()));
+            }
         }
 
         return model;
@@ -59,6 +75,12 @@ public class RestauranteModelAssembler extends RepresentationModelAssemblerSuppo
 
     @Override
     public CollectionModel<RestauranteModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities).add(yumLinks.linkToRestaurantes());
+        CollectionModel<RestauranteModel> collection = super.toCollectionModel(entities);
+
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            collection.add(yumLinks.linkToRestaurantes());
+        }
+
+        return collection;
     }
 }

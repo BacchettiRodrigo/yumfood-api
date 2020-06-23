@@ -5,6 +5,7 @@ import br.com.reignited.yumfood.api.v1.assembler.UsuarioModelAssembler;
 import br.com.reignited.yumfood.api.v1.model.UsuarioModel;
 import br.com.reignited.yumfood.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import br.com.reignited.yumfood.core.security.CheckSecurity;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Restaurante;
 import br.com.reignited.yumfood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,25 +27,30 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private YumLinks yumLinks;
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @Autowired
+    private YumSecurity yumSecurity;
+
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @GetMapping
     public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscar(restauranteId);
 
-        CollectionModel<UsuarioModel> usuarioModels = usuarioModelAssembler.toCollectionModel(restaurante.getReponsaveis())
-                .removeLinks()
-                .add(yumLinks.linkToRestauranteResponsavel(restauranteId))
-                .add(yumLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+        CollectionModel<UsuarioModel> usuarioModels = usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis())
+                .removeLinks();
 
-        usuarioModels.getContent().forEach(usuario -> {
-            usuario.add(yumLinks.linkToRestauranteFormaPagamentoDesassociacao(
-                    restauranteId, usuario.getId(), "desassociar"));
-        });
+        usuarioModels.add(yumLinks.linkToRestauranteResponsavel(restauranteId));
+        if (yumSecurity.podeGerenciarCadastroRestaurantes()) {
+            usuarioModels.add(yumLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+            usuarioModels.getContent().forEach(usuario -> {
+                usuario.add(yumLinks.linkToRestauranteFormaPagamentoDesassociacao(
+                        restauranteId, usuario.getId(), "desassociar"));
+            });
+        }
 
         return usuarioModels;
     }
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
@@ -52,7 +58,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         return ResponseEntity.noContent().build();
     }
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {

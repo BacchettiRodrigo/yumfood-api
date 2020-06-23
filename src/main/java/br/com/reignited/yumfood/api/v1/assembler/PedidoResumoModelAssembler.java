@@ -3,6 +3,7 @@ package br.com.reignited.yumfood.api.v1.assembler;
 import br.com.reignited.yumfood.api.v1.YumLinks;
 import br.com.reignited.yumfood.api.v1.controller.PedidoController;
 import br.com.reignited.yumfood.api.v1.model.PedidoResumoModel;
+import br.com.reignited.yumfood.core.security.YumSecurity;
 import br.com.reignited.yumfood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class PedidoResumoModelAssembler extends RepresentationModelAssemblerSupp
     @Autowired
     private YumLinks yumLinks;
 
+    @Autowired
+    private YumSecurity yumSecurity;
+
     public PedidoResumoModelAssembler() {
         super(PedidoController.class, PedidoResumoModel.class);
     }
@@ -27,8 +31,15 @@ public class PedidoResumoModelAssembler extends RepresentationModelAssemblerSupp
         PedidoResumoModel pedidoResumoModel = createModelWithId(source.getCodigo(), source);
         mapper.map(source, pedidoResumoModel);
 
-        pedidoResumoModel.getCliente().add(yumLinks.linkToUsuario(pedidoResumoModel.getCliente().getId()));
-        pedidoResumoModel.getRestaurante().add(yumLinks.linkToRestaurante(pedidoResumoModel.getRestaurante().getId()));
+        if (yumSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            pedidoResumoModel.getCliente().add(yumLinks.linkToUsuario(pedidoResumoModel.getCliente().getId()));
+        }
+        if (yumSecurity.podeConsultarRestaurantes()) {
+            pedidoResumoModel.getRestaurante().add(yumLinks.linkToRestaurante(pedidoResumoModel.getRestaurante().getId()));
+        }
+        if (yumSecurity.podePesquisarPedidos()) {
+            pedidoResumoModel.add(yumLinks.linkToPedidos("pedidos"));
+        }
 
         return pedidoResumoModel;
     }

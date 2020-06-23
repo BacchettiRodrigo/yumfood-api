@@ -8,6 +8,7 @@ import br.com.reignited.yumfood.api.v1.model.input.SenhaInput;
 import br.com.reignited.yumfood.api.v1.model.input.UsuarioComSenhaInput;
 import br.com.reignited.yumfood.api.v1.model.input.UsuarioInput;
 import br.com.reignited.yumfood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import br.com.reignited.yumfood.core.security.CheckSecurity;
 import br.com.reignited.yumfood.domain.model.Usuario;
 import br.com.reignited.yumfood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +36,20 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     @Autowired
     private UsuarioComSenhaDisassembler usuarioComSenhaDisassembler;
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioModel> listar() {
         List<Usuario> usuarios = usuarioService.listar();
         return usuarioModelAssembler.toCollectionModel(usuarios);
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeConsultar
     @GetMapping("/{usuarioId}")
     public UsuarioModel buscar(@PathVariable Long usuarioId) {
         return usuarioModelAssembler.toModel(usuarioService.buscar(usuarioId));
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioModel adicionar(@Valid @RequestBody UsuarioComSenhaInput input) {
@@ -53,6 +57,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return usuarioModelAssembler.toModel(usuarioService.salvar(usuario));
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeAlterarUsuario
     @PutMapping("/{usuarioId}")
     public UsuarioModel atualizar(@PathVariable Long usuarioId,@Valid @RequestBody UsuarioInput input) {
         Usuario usuarioAtual = usuarioService.buscar(usuarioId);
@@ -62,6 +67,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return usuarioModelAssembler.toModel(usuarioService.salvar(usuarioAtual));
     }
 
+    @CheckSecurity.UsuarioGruposPermissoes.PodeAlterarPropriaSenha
     @PutMapping("/{usuarioId}/senha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(@PathVariable Long usuarioId,@Valid @RequestBody SenhaInput senha) {
